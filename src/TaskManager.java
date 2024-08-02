@@ -1,7 +1,6 @@
-public class Main {
+public class TaskManager {
 
     public static void main(String[] args) {
-        500
         System.out.println("Поехали!");
     }
 }
