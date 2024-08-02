@@ -1,2 +1,4 @@
-public class SubTask {
+public class SubTask extends Epic{
+    public SubTask() {
+    }
 }

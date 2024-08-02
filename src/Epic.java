@@ -1,2 +1,4 @@
-public class Epic {
+public class Epic extends Task{
+    public Epic() {
+    }
 }
