@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TaskManager {
     int id = 1;
@@ -33,6 +35,7 @@ public class TaskManager {
         Status status = Status.NEW;
         return newTask;
     }
+
     public Task updateTask(Task updateTask) {
         int id = updateTask.getId();
         if (idToTask.containsKey(id)) {
@@ -69,10 +72,10 @@ public class TaskManager {
     }
 
     public Epic createEpic(Epic newEpic, Status status) {
-            int newId = id++;
-            newEpic.setId(newId);
-            idToEpic.put(newId, newEpic);
-            return newEpic;
+        int newId = id++;
+        newEpic.setId(newId);
+        idToEpic.put(newId, newEpic);
+        return newEpic;
     }
 
     public Epic updateEpic(Epic updateEpic) {
@@ -129,6 +132,19 @@ public class TaskManager {
         SubTask subTask = idToSubTask.get(id);
         idToSubTask.remove(id);
         return subTask;
+    }
+
+    public void getAllSubTasksOfEpic(Epic epic) {
+        int epicId = epic.getId();
+        List<SubTask> subTasks = new ArrayList<>();
+
+        for (SubTask subTask : idToSubTask.values()) {
+            if (subTask.getEpicId() == epicId) {
+                subTasks.add(subTask);
+            }
+        }
+
+        return subTasks;
     }
 }
 

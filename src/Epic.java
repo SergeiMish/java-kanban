@@ -6,9 +6,11 @@ public class Epic extends Task{
         super(name, detail);
 
 
+
     }
 
     public void addSubTask(int newId, SubTask newSubTask) {
-        HashMap<Integer, SubTask>addSubTask = new HashMap<>();
+        HashMap<Integer, SubTask>listSubTask = new HashMap<>();
+        listSubTask.put(newId, newSubTask);
     }
 }
