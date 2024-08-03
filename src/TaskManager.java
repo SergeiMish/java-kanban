@@ -30,6 +30,7 @@ public class TaskManager {
         int newId = id++;
         newTask.setId(newId);
         idToTask.put(newId, newTask);
+        Status status = Status.NEW;
         return newTask;
     }
     public Task updateTask(Task updateTask) {
@@ -67,7 +68,7 @@ public class TaskManager {
         }
     }
 
-    public Epic createEpic(Epic newEpic) {
+    public Epic createEpic(Epic newEpic, Status status) {
             int newId = id++;
             newEpic.setId(newId);
             idToEpic.put(newId, newEpic);
@@ -108,10 +109,11 @@ public class TaskManager {
         }
     }
 
-    public SubTask createSubTask(SubTask newSubTask) {
+    public SubTask createSubTask(SubTask newSubTask, Epic epic, Status status) {
         int newId = id++;
         newSubTask.setId(newId);
-        idToEpic.put(newId, newSubTask);
+        epic.addSubTask(newId, newSubTask);
+        idToSubTask.put(newId, newSubTask);
         return newSubTask;
     }
 

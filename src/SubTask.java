@@ -1,5 +1,5 @@
-public class SubTask extends Epic{
+public class SubTask extends Task{
     public SubTask(String name, String detail, int id) {
-        super(name, detail, id);
+        super(name, detail, Status.NEW);
     }
 }

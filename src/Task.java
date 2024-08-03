@@ -2,22 +2,7 @@ public class Task {
     private String name;
     private String detail;
     private int id;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
+    private static String status;
 
     public int getId() {
         return id;
@@ -27,22 +12,18 @@ public class Task {
         this.id = id;
     }
 
-    public static String getProgress() {
-        return progress;
+    public static String getStatus() {
+        return status;
     }
 
-    public static void setProgress(String progress) {
-        Task.progress = progress;
+    public static void setStatus(String status) {
+        Task.status = status;
     }
 
-    private static String progress;
-
-    public Task(String name, String detail, int id) {
+    public Task(String name, String detail) {
         this.name = name;
         this.detail = detail;
-        this.id = id;
     }
 }
-
 
 
