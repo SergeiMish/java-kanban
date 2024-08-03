@@ -5,7 +5,7 @@ public class Main {
         Task newTa2 = new Task("Имя", "Детали", 5);
         taskManager.createTask(newTa);
         taskManager.createTask(newTa2);
-        taskManager.addNewTask(newTa);
-        System.out.println(newTa);
+        System.out.println(newTa.toString());
+        System.out.println(newTa2.toString());
     }
 }

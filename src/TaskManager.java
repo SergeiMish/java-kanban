@@ -6,13 +6,6 @@ public class TaskManager {
     HashMap<Integer, Epic> idToEpic = new HashMap<>();
     HashMap<Integer, SubTask> idToSubTask = new HashMap<>();
 
-    public Task addNewTask(Task newTask) {
-        int newId = id++;
-        newTask.setId(id);
-        idToTask.put(newTask.getId(), newTask);
-        return newTask;
-    }
-
     public void listTask() {
         for (Task value : idToTask.values()) {
             System.out.println(value);
@@ -33,14 +26,11 @@ public class TaskManager {
         }
     }
 
-    public void createTask(Task newTask) {
-        int taskId = newTask.getId();
-        if (!idToTask.containsKey(taskId)) {
-            idToTask.put(taskId, newTask);
-            System.out.println("Задача успешно создана");
-        } else {
-            System.out.println("Задача с таким Id уже существует");
-        }
+    public Task createTask(Task newTask) {
+        int newId = id++;
+        newTask.setId(newId);
+        idToTask.put(newId, newTask);
+        return newTask;
     }
     public Task updateTask(Task updateTask) {
         int id = updateTask.getId();
@@ -56,12 +46,6 @@ public class TaskManager {
         return task;
     }
 
-    public Epic addNewEpic(Epic newEpic) {
-        int newId = id++;
-        newEpic.setId(id);
-        idToEpic.put(newEpic.getId(), newEpic);
-        return newEpic;
-    }
 
     public void listEpic() {
         for (Task value : idToEpic.values()) {
@@ -84,14 +68,10 @@ public class TaskManager {
     }
 
     public Epic createEpic(Epic newEpic) {
-        int epicId = newEpic.getId();
-        if (!idToEpic.containsKey(epicId)) {
-            idToTask.put(epicId, newEpic);
-            System.out.println("Задача успешно создана");
-        } else {
-            System.out.println("Задача с таким Id уже существует");
-        }
-        return newEpic;
+            int newId = id++;
+            newEpic.setId(newId);
+            idToEpic.put(newId, newEpic);
+            return newEpic;
     }
 
     public Epic updateEpic(Epic updateEpic) {
@@ -106,13 +86,6 @@ public class TaskManager {
         Epic epic = idToEpic.get(id);
         idToEpic.remove(id);
         return epic;
-    }
-
-    public SubTask addNewSubTask(SubTask newSubTask) {
-        int newId = id++;
-        newSubTask.setId(id);
-        idToSubTask.put(newSubTask.getId(), newSubTask);
-        return newSubTask;
     }
 
     public void listSubTask() {
@@ -136,13 +109,9 @@ public class TaskManager {
     }
 
     public SubTask createSubTask(SubTask newSubTask) {
-        int subTaskId = newSubTask.getId();
-        if (!idToSubTask.containsKey(subTaskId)) {
-            idToSubTask.put(subTaskId, newSubTask);
-            System.out.println("Задача успешно создана");
-        } else {
-            System.out.println("Задача с таким Id уже существует");
-        }
+        int newId = id++;
+        newSubTask.setId(newId);
+        idToEpic.put(newId, newSubTask);
         return newSubTask;
     }
 
