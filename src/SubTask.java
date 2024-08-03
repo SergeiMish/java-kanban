@@ -1,4 +1,5 @@
 public class SubTask extends Epic{
-    public SubTask() {
+    public SubTask(String name, String detail, int id) {
+        super(name, detail, id);
     }
 }
