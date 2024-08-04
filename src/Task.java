@@ -1,5 +1,19 @@
+import java.util.List;
+
 public class Task {
+    /**
+     * Коасс Task с основными параметрами для работы. name,detail,status,id.
+     */
     private String name;
+    private String detail;
+    private int id;
+    private Status status;
+
+    public Task(String name, String detail, Status status) {
+        this.name = name;
+        this.detail = detail;
+        this.status = status;
+    }
 
     public String getName() {
         return name;
@@ -17,9 +31,6 @@ public class Task {
         this.detail = detail;
     }
 
-    private String detail;
-    private int id;
-
     public Status getStatus() {
         return status;
     }
@@ -28,19 +39,12 @@ public class Task {
         this.status = status;
     }
 
-    private Status status;
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Task(String name, String detail) {
-        this.name = name;
-        this.detail = detail;
     }
 }
 
