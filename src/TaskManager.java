@@ -1,23 +1,23 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TaskManager {
-    int id = 1;
+    private int id = 1;
     /**
      * Мапы для хранения Task, Epic, SubTask
      */
-    HashMap<Integer, Task> idToTask = new HashMap<>();
-    HashMap<Integer, Epic> idToEpic = new HashMap<>();
-    HashMap<Integer, SubTask> idToSubTask = new HashMap<>();
+    Map<Integer, Task> idToTask = new HashMap<>();
+    Map<Integer, Epic> idToEpic = new HashMap<>();
+    Map<Integer, SubTask> idToSubTask = new HashMap<>();
 
     /**
      * Метод вывода задач
      */
-    public void listTasks() {
-        for (Task task : idToTask.values()) {
-            System.out.println("ID: " + task.getId() + ", Name: " + task.getName() + ", Detail: " + task.getDetail() +
-                    ", Status: " + task.getStatus());
-        }
+    public List<Task> getAllTasks() {
+        List<Task> taskList = new ArrayList<>(idToTask.values());
+        return taskList;
     }
 
     /**
@@ -30,23 +30,21 @@ public class TaskManager {
     /**
      * Метод поиска по ID задачи
      *
-     * @param findTask
      * @return
      */
-    public int findTask(Task findTask) {
-        int task = findTask.getId();
-        if (idToTask.containsKey(task)) {
-            return task;
+    public Task findTask(Task findTask) {
+        int taskId = findTask.getId();
+        if (idToTask.containsKey(taskId)) {
+            return idToTask.get(taskId);
         } else {
             System.out.println("Такого Id не существует");
-            return -1;
+            return null;
         }
     }
 
     /**
      * Метод создания задачи
      *
-     * @param newTask
      * @return
      */
     public Task createTask(Task newTask) {
@@ -59,7 +57,6 @@ public class TaskManager {
     /**
      * Метод обновления задачи
      *
-     * @param updateTask
      * @return
      */
     public Task updateTask(Task updateTask) {
@@ -73,7 +70,6 @@ public class TaskManager {
     /**
      * Метод удаления задачи по ID
      *
-     * @param id
      * @return
      */
     public Task deleteTask(Integer id) {
@@ -85,40 +81,38 @@ public class TaskManager {
     /**
      * Вывод на экран скиска эпиков
      */
-    public void listEpic() {
-        for (Epic epic : idToEpic.values()) {
-            System.out.println("ID: " + epic.getId() + ", Name: " + epic.getName() + ", Detail: " + epic.getDetail() +
-                    ", Status: " + epic.getStatus());
-        }
+    public List<Epic> listEpic() {
+        List<Epic> epicList = new ArrayList<>(idToEpic.values());
+        return epicList;
     }
 
     /**
      * Удаление всех эпиков
      */
     public void deleteAllEpic() {
+        for (Epic epic : idToEpic.values()) {
+            epic.getListSubTask().clear();
+        }
         idToEpic.clear();
     }
 
     /**
      * Метод поиска эпика по ID
      *
-     * @param findEpic
      * @return
      */
-    public int findEpic(Task findEpic) {
-        int epic = findEpic.getId();
-        if (idToTask.containsKey(epic)) {
-            return epic;
+    public Epic findEpic(int epicId) {
+        if (idToEpic.containsKey(epicId)) {
+            return idToEpic.get(epicId);
         } else {
             System.out.println("Такого Id не существует");
-            return -1;
+            return null;
         }
     }
 
     /**
      * Метод создания эпика
      *
-     * @param newEpic
      * @return
      */
     public Epic createEpic(Epic newEpic) {
@@ -134,7 +128,6 @@ public class TaskManager {
     /**
      * Метод обновления эпика
      *
-     * @param updateEpic
      * @return
      */
     public Epic updateEpic(Epic updateEpic) {
@@ -148,7 +141,6 @@ public class TaskManager {
     /**
      * Метод удаления эпика по ID
      *
-     * @param id
      * @return
      */
     public Epic deleteEpic(Integer id) {
@@ -160,63 +152,51 @@ public class TaskManager {
     /**
      * Вывод на экран всех сабтасок
      */
-    public void listSubTask() {
-        for (SubTask subTask : idToSubTask.values()) {
-            System.out.println("ID: " + subTask.getId() + ", Name: " + subTask.getName() + ", Detail: " + subTask.getDetail() +
-                    ", Status: " + subTask.getStatus());
-        }
+    public List<SubTask> listSubTask() {
+        List<SubTask> subTasks = new ArrayList<>(idToSubTask.values());
+        return subTasks;
     }
 
     /**
      * Удаление всех сабтасок
      */
     public void deleteAllSubTask() {
-        idToEpic.clear();
+        for (Epic epic : idToEpic.values()) {
+            epic.getListSubTask().clear();
+            epic.updateEpicStatus(epic);
+        }
     }
 
     /**
      * Поиск сабтасок по ID
      *
-     * @param findSubTask
      * @return
      */
-    public int findSubTask(SubTask findSubTask) {
-        int subTask = findSubTask.getId();
-        if (idToSubTask.containsKey(subTask)) {
-            return subTask;
+    public SubTask findSubTask(int subtaskId) {
+        if (idToSubTask.containsKey(subtaskId)) {
+            return idToSubTask.get(subtaskId);
         } else {
             System.out.println("Такого Id не существует");
-            return -1;
+            return null;
         }
     }
 
     /**
      * Создание сабтаски, привязка к эпику, проверка статуса.
      *
-     * @param newSubTask
-     * @param epic
      * @return
      */
     public SubTask createSubTask(SubTask newSubTask, Epic epic) {
         int newId = id++;
         newSubTask.setId(newId);
-        epic.addSubTask(newId, newSubTask);
-        epic.addSubTaskStatus(newId, newSubTask.getStatus());
         idToSubTask.put(newId, newSubTask);
-        for (Map.Entry<Integer, Status> entry1 : epic.getSubTaskStatus().entrySet()) {
-            String status = entry1.getValue().name();
-            if (status.equals(Status.NEW) || epic.listSubTask == null) {
-                epic.setStatus(Status.NEW);
-            }
-        }
+        epic.updateEpicStatus(epic);
         return newSubTask;
     }
 
     /**
      * Обновление сабтаски, проверка статуса, обновление статуса эпика.
      *
-     * @param updateSubTask
-     * @param epic
      * @return
      */
     public SubTask updateSubTask(SubTask updateSubTask, Epic epic) {
@@ -224,14 +204,7 @@ public class TaskManager {
         if (idToSubTask.containsKey(id)) {
             idToSubTask.put(updateSubTask.getId(), updateSubTask);
         }
-        for (Map.Entry<Integer, Status> entry1 : epic.getSubTaskStatus().entrySet()) {
-            String status = entry1.getValue().name();
-            if (status.equals(Status.DONE)) {
-                epic.setStatus(Status.DONE);
-            } else {
-                epic.setStatus(Status.IN_PROGRESS);
-            }
-        }
+        epic.updateEpicStatus(epic);
         return updateSubTask;
     }
 
@@ -244,26 +217,21 @@ public class TaskManager {
     public SubTask deleteSubTask(Integer id) {
         SubTask subTask = idToSubTask.get(id);
         idToSubTask.remove(id);
+        for (Epic epic : idToEpic.values()) {
+            if (epic.getListSubTask().contains(subTask)) {
+                epic.updateEpicStatus(epic);
+            } else {
+                return null;
+            }
+        }
         return subTask;
     }
 
     /**
      * Вывод на экран всех сабтасок конкретного эпика.
-     *
-     * @param epic
      */
-    public void getAllSubTasksOfEpic(Epic epic) {
-        int epicId = epic.getId();
-        if (idToEpic.containsKey(epicId)) {
-            for (Map.Entry<Integer, SubTask> entry : epic.getListSubTask().entrySet()) {
-                for (Map.Entry<Integer, Status> entry1 : epic.getSubTaskStatus().entrySet()) {
-                    String status = entry1.getValue().name();
-                    int subTaskId = entry.getKey();
-                    String subTaskName = entry.getValue().getName();
-                    System.out.println("Subtask ID: " + subTaskId + ", Subtask Name: " + subTaskName + ", Status " + status);
-                }
-            }
-        }
+    public List<SubTask> getAllSubTasksOfEpic(Epic epic) {
+        return epic.getListSubTask();
     }
 }
 

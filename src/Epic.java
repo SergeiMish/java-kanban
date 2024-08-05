@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Epic extends Task {
     /**
@@ -7,27 +9,36 @@ public class Epic extends Task {
      * 2. Хранит ID и статус сабтаски
      * Содержит методы для работы с мапами.
      */
-    HashMap<Integer, SubTask> listSubTask = new HashMap<>();
-    HashMap<Integer, Status> subTaskStatus = new HashMap<>();
+   ArrayList<SubTask> listSubTask = new ArrayList<>();
+    Map<Integer, Status> subTaskStatus = new HashMap<>();
 
     public Epic(String name, String detail, Status status) {
         super(name, detail, status);
     }
 
-    public HashMap<Integer, Status> getSubTaskStatus() {
-        return subTaskStatus;
-    }
-
-    public void addSubTaskStatus(int newId, Status status) {
-        subTaskStatus.put(newId, status);
-    }
-
-    public void addSubTask(int newId, SubTask newSubTask) {
-        listSubTask.put(newId, newSubTask);
-    }
-
-    public HashMap<Integer, SubTask> getListSubTask() {
+    public ArrayList<SubTask> getListSubTask() {
         return listSubTask;
+    }
+
+    public void updateEpicStatus(Epic epic) {
+        boolean allDone = true;
+        boolean allNew = true;
+
+        for (Status status : subTaskStatus.values()) {
+            if (status != Status.DONE) {
+                allDone = false;
+            } else {
+                allNew = false;
+            }
+        }
+
+        if (allDone) {
+            epic.setStatus(Status.DONE);
+        } else if (allNew) {
+            epic.setStatus(Status.NEW);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 }
 
