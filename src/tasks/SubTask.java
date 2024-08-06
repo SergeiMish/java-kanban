@@ -1,7 +1,5 @@
 package tasks;
 
-import tasks.Task;
-
 public class SubTask extends Task {
     public int getEpicId() {
         return epicId;
