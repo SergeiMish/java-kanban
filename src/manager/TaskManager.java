@@ -128,6 +128,39 @@ public class TaskManager {
         return newEpic;
     }
 
+    public void updateEpicStatus() {
+        for (Epic epic : idToEpic.values()) {
+            List<Integer> listSubTask = epic.getListSubTask();
+            if (listSubTask.isEmpty()) {
+                epic.setStatus(Status.NEW);
+                continue;
+            }
+
+            boolean allNew = true;
+            boolean allDone = true;
+
+            for (Integer subTaskId : listSubTask) {
+                SubTask subTask = idToSubTask.get(subTaskId);
+                if (subTask == null) continue;
+
+                if (subTask.getStatus() != Status.NEW) {
+                    allNew = false;
+                }
+                if (subTask.getStatus() != Status.DONE) {
+                    allDone = false;
+                }
+            }
+
+            if (allNew) {
+                epic.setStatus(Status.NEW);
+            } else if (allDone) {
+                epic.setStatus(Status.DONE);
+            } else {
+                epic.setStatus(Status.IN_PROGRESS);
+            }
+        }
+    }
+
     /**
      * Метод обновления эпика
      *
@@ -160,7 +193,7 @@ public class TaskManager {
     /**
      * Вывод на экран всех сабтасок
      */
-    public List<SubTask> getlistSubTask() {
+    public List<SubTask> getSubTasks() {
         return new ArrayList<>(idToSubTask.values());
     }
 
@@ -170,7 +203,7 @@ public class TaskManager {
     public void deleteAllSubTask() {
         for (Epic epic : idToEpic.values()) {
             epic.removeAllSubtasks();
-            epic.updateEpicStatus();
+            updateEpicStatus();
         }
     }
 
@@ -198,7 +231,7 @@ public class TaskManager {
         newSubTask.setEpicId(newId);
         idToSubTask.put(newId, newSubTask);
         epic.addSubTask(newSubTask);
-        epic.updateEpicStatus();
+        updateEpicStatus();
         return newSubTask;
     }
 
@@ -212,7 +245,7 @@ public class TaskManager {
         if (idToSubTask.containsKey(id)) {
             idToSubTask.put(updateSubTask.getId(), updateSubTask);
         }
-        epic.updateEpicStatus();
+        updateEpicStatus();
         return updateSubTask;
     }
 
@@ -228,7 +261,7 @@ public class TaskManager {
         Epic epic = idToEpic.get(subTask.getEpicId());
         if (epic != null) {
             epic.removeSubTask(id);
-            epic.updateEpicStatus();
+            updateEpicStatus();
         }
         return subTask;
     }
