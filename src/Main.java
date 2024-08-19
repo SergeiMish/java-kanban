@@ -54,7 +54,7 @@ public class Main {
         }
     }
 
-    public static void history(HistoryManager historyManager) {
+    public static void history(HistoryManager historyManager){
         System.out.println("История:");
         for (Task task : historyManager.getHistory()) {
             System.out.println(task.toString());
