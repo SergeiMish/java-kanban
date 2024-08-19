@@ -154,9 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(idToSubTask.values());
     }
 
-    /**
-     * Удаление всех сабтасок
-     */
+    @Override
     public void deleteAllSubTask() {
         for (Epic epic : idToEpic.values()) {
             epic.removeAllSubtasks();
@@ -164,11 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    /**
-     * Поиск сабтасок по ID
-     *
-     * @return
-     */
+    @Override
     public SubTask findSubTask(int subtaskId) {
         if (idToSubTask.containsKey(subtaskId)) {
             return idToSubTask.get(subtaskId);
@@ -178,11 +172,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    /**
-     * Создание сабтаски, привязка к эпику, проверка статуса.
-     *
-     * @return
-     */
+    @Override
     public SubTask createSubTask(SubTask newSubTask, Epic epic) {
         int newId = id++;
         newSubTask.setEpicId(newId);
