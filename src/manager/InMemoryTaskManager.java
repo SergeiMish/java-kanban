@@ -20,9 +20,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getListTasks() {
-        Task task = idToTask.get(id);
-        historyManager.add(task);
-        return new ArrayList<>(idToTask.values());
+        List<Task> tasks = new ArrayList<>(idToTask.values());
+        for (Task task : tasks) {
+            historyManager.add(task);
+        }
+        return tasks;
     }
 
     @Override
@@ -67,13 +69,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Epic> getListEpic() {
-        Epic epic = idToEpic.get(id);
-        for (Integer integer : idToTask.keySet()) {
-
+            List<Epic> epics = new ArrayList<>(idToEpic.values());
+            for (Epic epic : epics) {
+                historyManager.add(epic);
+            }
+            return epics;
         }
-            historyManager.add(epic);
-        return new ArrayList<>(idToEpic.values());
-    }
+
 
     @Override
     public void deleteAllEpic() {
@@ -158,9 +160,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<SubTask> getSubTasks() {
-        SubTask subTask = idToSubTask.get(id);
-        historyManager.add(subTask);
-        return new ArrayList<>(idToSubTask.values());
+        List<SubTask> subTasks = new ArrayList<>(idToSubTask.values());
+        for (SubTask subTask : subTasks) {
+            historyManager.add(subTask);
+        }
+        return subTasks;
     }
 
     @Override
