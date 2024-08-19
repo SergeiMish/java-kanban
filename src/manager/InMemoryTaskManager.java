@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryTaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
     /**
      * Мапы для хранения Task, Epic, SubTask
@@ -273,4 +273,4 @@ public class InMemoryTaskManager {
         return epic.getListSubTask();
     }
 }
-}
+

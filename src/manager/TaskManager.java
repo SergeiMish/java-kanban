@@ -1,277 +1,48 @@
 package manager;
 
 import tasks.Epic;
-import tasks.Status;
 import tasks.SubTask;
-import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class TaskManager {
-    private int id = 1;
-    /**
-     * Мапы для хранения Task, Epic, SubTask
-     */
-    private final Map<Integer, Task> idToTask = new HashMap<>();
-    private final Map<Integer, Epic> idToEpic = new HashMap<>();
-    private final Map<Integer, SubTask> idToSubTask = new HashMap<>();
+public interface TaskManager {
+    List<tasks.Task> getListTasks();
 
-    /**
-     * Метод вывода задач
-     */
-    public List<Task> getListTasks() {
-        return new ArrayList<>(idToTask.values());
-    }
+    void deleteAllTask();
 
-    /**
-     * Метод удаления всех задач
-     */
-    public void deleteAllTask() {
-        idToTask.clear();
-    }
+    tasks.Task findTask(tasks.Task findTask);
 
-    /**
-     * Метод поиска по ID задачи
-     *
-     * @return
-     */
-    public Task findTask(Task findTask) {
-        int taskId = findTask.getId();
-        if (idToTask.containsKey(taskId)) {
-            return idToTask.get(taskId);
-        } else {
-            System.out.println("Такого Id не существует");
-            return null;
-        }
-    }
+    tasks.Task createTask(tasks.Task newTask);
 
-    /**
-     * Метод создания задачи
-     *
-     * @return
-     */
-    public Task createTask(Task newTask) {
-        int newId = id++;
-        newTask.setId(newId);
-        idToTask.put(newId, newTask);
-        return newTask;
-    }
+    tasks.Task updateTask(tasks.Task updateTask);
 
-    /**
-     * Метод обновления задачи
-     *
-     * @return
-     */
-    public Task updateTask(Task updateTask) {
-        int id = updateTask.getId();
-        if (idToTask.containsKey(id)) {
-            idToTask.put(updateTask.getId(), updateTask);
-        }
-        return updateTask;
-    }
+    tasks.Task deleteTask(Integer id);
 
-    /**
-     * Метод удаления задачи по ID
-     *
-     * @return
-     */
-    public Task deleteTask(Integer id) {
-        Task task = idToTask.get(id);
-        idToTask.remove(id);
-        return task;
-    }
+    List<Epic> getListEpic();
 
-    /**
-     * Вывод на экран скиска эпиков
-     */
-    public List<Epic> getListEpic() {
-        return new ArrayList<>(idToEpic.values());
-    }
+    void deleteAllEpic();
 
-    /**
-     * Удаление всех эпиков
-     */
-    public void deleteAllEpic() {
-        idToSubTask.clear();
-        idToEpic.clear();
-    }
+    Epic findEpic(int epicId);
 
-    /**
-     * Метод поиска эпика по ID
-     *
-     * @return
-     */
-    public Epic findEpic(int epicId) {
-        if (idToEpic.containsKey(epicId)) {
-            return idToEpic.get(epicId);
-        } else {
-            System.out.println("Такого Id не существует");
-            return null;
-        }
-    }
+    Epic createEpic(Epic newEpic);
 
-    /**
-     * Метод создания эпика
-     *
-     * @return
-     */
-    public Epic createEpic(Epic newEpic) {
-        int newId = id++;
-        newEpic.setId(newId);
-        idToEpic.put(newId, newEpic);
-        if (newEpic.getListSubTask() == null) {
-            newEpic.setStatus(Status.NEW);
-        }
-        return newEpic;
-    }
+    void updateEpicStatus(int epicId);
 
-    public void updateEpicStatus(int epicId) {
-        Epic epic = idToEpic.get(epicId);
-        List<Integer> listSubTask = epic.getListSubTask();
-        if (listSubTask.isEmpty()) {
-            epic.setStatus(Status.NEW);
-            return;
-        }
+    Epic updateEpic(Epic updateEpic);
 
-        boolean allNew = true;
-        boolean allDone = true;
+    Epic deleteEpic(Integer id);
 
-        for (Integer subTaskId : listSubTask) {
-            SubTask subTask = idToSubTask.get(subTaskId);
-            if (subTask == null) continue;
+    List<SubTask> getSubTasks();
 
-            if (subTask.getStatus() != Status.NEW) {
-                allNew = false;
-            }
-            if (subTask.getStatus() != Status.DONE) {
-                allDone = false;
-            }
-        }
+    void deleteAllSubTask();
 
-        if (allNew) {
-            epic.setStatus(Status.NEW);
-        } else if (allDone) {
-            epic.setStatus(Status.DONE);
-        } else {
-            epic.setStatus(Status.IN_PROGRESS);
-        }
-    }
+    SubTask findSubTask(int subtaskId);
 
-    /**
-     * Метод обновления эпика
-     *
-     * @return
-     */
-    public Epic updateEpic(Epic updateEpic) {
-        int id = updateEpic.getId();
-        if (idToEpic.containsKey(id)) {
-            Epic epic = idToEpic.get(id);
-            epic.setName(updateEpic.getName());
-            epic.setDetail(updateEpic.getDetail());
-        }
-        return updateEpic;
-    }
+    SubTask createSubTask(SubTask newSubTask, Epic epic);
 
-    /**
-     * Метод удаления эпика по ID
-     *
-     * @return
-     */
-    public Epic deleteEpic(Integer id) {
-        Epic epic = idToEpic.get(id);
-        for (Integer subTaskId : epic.getListSubTask()) {
-            idToSubTask.remove(subTaskId);
-        }
-        idToEpic.remove(id);
-        return epic;
-    }
+    SubTask updateSubTask(SubTask updateSubTask, Epic epic);
 
-    /**
-     * Вывод на экран всех сабтасок
-     */
-    public List<SubTask> getSubTasks() {
-        return new ArrayList<>(idToSubTask.values());
-    }
+    SubTask deleteSubTask(Integer id);
 
-    /**
-     * Удаление всех сабтасок
-     */
-    public void deleteAllSubTask() {
-        for (Epic epic : idToEpic.values()) {
-            epic.removeAllSubtasks();
-            updateEpicStatus(epic.getId());
-        }
-    }
-
-    /**
-     * Поиск сабтасок по ID
-     *
-     * @return
-     */
-    public SubTask findSubTask(int subtaskId) {
-        if (idToSubTask.containsKey(subtaskId)) {
-            return idToSubTask.get(subtaskId);
-        } else {
-            System.out.println("Такого Id не существует");
-            return null;
-        }
-    }
-
-    /**
-     * Создание сабтаски, привязка к эпику, проверка статуса.
-     *
-     * @return
-     */
-    public SubTask createSubTask(SubTask newSubTask, Epic epic) {
-        int newId = id++;
-        newSubTask.setEpicId(newId);
-        idToSubTask.put(newId, newSubTask);
-        epic.addSubTask(newSubTask);
-        updateEpicStatus(epic.getId());
-        return newSubTask;
-    }
-
-    /**
-     * Обновление сабтаски, проверка статуса, обновление статуса эпика.
-     *
-     * @return
-     */
-    public SubTask updateSubTask(SubTask updateSubTask, Epic epic) {
-        int id = updateSubTask.getId();
-        if (idToSubTask.containsKey(id)) {
-            idToSubTask.put(updateSubTask.getId(), updateSubTask);
-        }
-        updateEpicStatus(epic.getId());
-        return updateSubTask;
-    }
-
-    /**
-     * Удаление сабтаски по ID
-     *
-     * @param id
-     * @return
-     */
-    public SubTask deleteSubTask(Integer id) {
-        SubTask subTask = idToSubTask.get(id);
-        idToSubTask.remove(id);
-        Epic epic = idToEpic.get(subTask.getEpicId());
-        if (epic != null) {
-            epic.removeSubTask(id);
-            updateEpicStatus(epic.getId());
-        }
-        return subTask;
-    }
-
-
-    /**
-     * Вывод на экран всех сабтасок конкретного эпика.
-     */
-    public List<Integer> getAllSubTasksOfEpic(Epic epic) {
-        return epic.getListSubTask();
-    }
+    List<Integer> getAllSubTasksOfEpic(Epic epic);
 }
-
-

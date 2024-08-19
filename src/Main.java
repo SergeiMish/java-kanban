@@ -1,8 +1,9 @@
+import manager.InMemoryTaskManager;
 import manager.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = new InMemoryTaskManager();
 //        Task newTa = new Task("Имя", "Детали", Status.NEW);
 //        Task newTa2 = new Task("Имя", "Детали", Status.DONE);
 //        Epic epic1 = new Epic("Задача", "Детали задачи", Status.NEW);
