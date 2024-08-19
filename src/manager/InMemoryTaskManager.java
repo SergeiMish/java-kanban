@@ -182,11 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
         return newSubTask;
     }
 
-    /**
-     * Обновление сабтаски, проверка статуса, обновление статуса эпика.
-     *
-     * @return
-     */
+    @Override
     public SubTask updateSubTask(SubTask updateSubTask, Epic epic) {
         int id = updateSubTask.getId();
         if (idToSubTask.containsKey(id)) {
@@ -196,12 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
         return updateSubTask;
     }
 
-    /**
-     * Удаление сабтаски по ID
-     *
-     * @param id
-     * @return
-     */
+    @Override
     public SubTask deleteSubTask(Integer id) {
         SubTask subTask = idToSubTask.get(id);
         idToSubTask.remove(id);
@@ -213,10 +204,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subTask;
     }
 
-
-    /**
-     * Вывод на экран всех сабтасок конкретного эпика.
-     */
+    @Override
     public List<Integer> getAllSubTasksOfEpic(Epic epic) {
         return epic.getListSubTask();
     }
