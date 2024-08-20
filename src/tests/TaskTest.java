@@ -1,5 +1,8 @@
 package tests;
 
+import Interfaces.HistoryManager;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -34,5 +37,17 @@ public class TaskTest {
         int e1 = epic1.getId();
         int e2 = epic2.getId();
         assertEquals(e1, e2, "Эпики имеют одинаковый ID");
+    }
+
+    @Test
+    public void testTaskIdConflict() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager(historyManager);
+        Task task1 = new Task("Имя1", "детали", Status.NEW);
+        Task task2 = new Task("Имя2", "детали", Status.NEW);
+        manager.createTask(task1);
+        manager.createTask(task2);
+        assertEquals(task1, manager.getListTasks().get(0));
+        assertEquals(task2, manager.getListTasks().get(1));
     }
 }
