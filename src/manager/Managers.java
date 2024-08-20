@@ -5,10 +5,12 @@ import Interfaces.TaskManager;
 
 public class Managers {
     public static TaskManager getDefault() {
-        // Верните реализацию TaskManager по умолчанию
-        return new InMemoryTaskManager();
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        return new InMemoryTaskManager(historyManager);
     }
-    public static HistoryManager getDefaultHistory(){
+
+    public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
 }
+
