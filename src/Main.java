@@ -27,6 +27,8 @@ public class Main {
         taskManager.getListTasks();
         taskManager.getListEpic();
         taskManager.getEpicId(3);
+        taskManager.getSubTaskId(3);
+        taskManager.getSubTaskId(3);
         taskManager.getListSubTask();
 
         printAllTasks(taskManager);

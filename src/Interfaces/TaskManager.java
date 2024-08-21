@@ -37,7 +37,7 @@ public interface TaskManager {
 
     void deleteAllSubTask();
 
-    SubTask getSubTaskId(int subtaskId);
+    SubTask getSubTaskId(Integer subtaskId);
 
     SubTask createSubTask(SubTask newSubTask);
 
