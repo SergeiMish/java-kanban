@@ -196,6 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
             idToSubTask.put(newId, newSubTask);
             epic.addSubTask(newId);
             updateEpicStatus(epic.getId());
+
             return newSubTask;
         }
         return null;

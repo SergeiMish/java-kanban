@@ -13,9 +13,9 @@ public class Main {
         Task task = new Task("Поход в магазин", "Покупка молока", Status.NEW);
         Task task1 = new Task("Уборка", "Только кухня", Status.IN_PROGRESS);
         Epic epic = new Epic("Поход в автосалон", "Тест драйв 3-х китайцев", Status.NEW);
-        SubTask subTask1 = new SubTask("Haval", "в 10.00", Status.NEW);
-        SubTask subTask2 = new SubTask("Changan", "14.00", Status.NEW);
-        SubTask subTask3 = new SubTask("Cherry", "Лучше совсем не ходить", Status.NEW);
+        SubTask subTask1 = new SubTask("Haval", "в 10.00", Status.NEW, 3);
+        SubTask subTask2 = new SubTask("Changan", "14.00", Status.NEW, 3);
+        SubTask subTask3 = new SubTask("Cherry", "Лучше совсем не ходить", Status.NEW, 3);
 
         taskManager.createTask(task);
         taskManager.createTask(task1);
