@@ -36,8 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task findTask(Task findTask) {
-        int taskId = findTask.getId();
+    public Task findTask(int taskId) {
         if (idToTask.containsKey(taskId)) {
             return idToTask.get(taskId);
         } else {
@@ -73,7 +72,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Epic> getListEpic() {
         List<Epic> epics = new ArrayList<>(idToEpic.values());
-        for (Epic epic : epics) {
+        Epic epic = idToEpic.get(id);
+        if (epic != null) {
             historyManager.add(epic);
         }
         return epics;
@@ -163,11 +163,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<SubTask> getSubTasks() {
-        List<SubTask> subTasks = new ArrayList<>(idToSubTask.values());
-        for (SubTask subTask : subTasks) {
+        SubTask subTask = idToSubTask.get(id);
+        if (subTask != null) {
             historyManager.add(subTask);
-        }
-        return subTasks;
+        } return new ArrayList<>(idToSubTask.values());
     }
 
     @Override
@@ -223,7 +222,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Integer> getAllSubTasksOfEpic(int epicId) {
+    public List<Integer> getListSubTasksOfEpic(int epicId) {
         return idToEpic.containsKey(epicId) ? idToEpic.get(epicId).getListSubTask() : null;
     }
 

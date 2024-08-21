@@ -11,13 +11,13 @@ public interface TaskManager {
 
     void deleteAllTask();
 
-    tasks.Task findTask(Task findTask);
+    Task findTask(int taskId);
 
-    tasks.Task createTask(tasks.Task newTask);
+    Task createTask(Task newTask);
 
-    tasks.Task updateTask(tasks.Task updateTask);
+    Task updateTask(Task updateTask);
 
-    tasks.Task deleteTask(Integer id);
+    Task deleteTask(Integer id);
 
     List<Epic> getListEpic();
 
@@ -43,7 +43,7 @@ public interface TaskManager {
 
     SubTask deleteSubTask(Integer id);
 
-    List<Integer> getAllSubTasksOfEpic(int epicId);
+    List<Integer> getListSubTasksOfEpic(int epicId);
 
     List<Task> getHistory();
 }
