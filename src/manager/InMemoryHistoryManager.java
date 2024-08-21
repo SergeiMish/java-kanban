@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final int MAX_SIZE_MEMORY = 10
+    private final int MAX_SIZE_MEMORY = 10;
     private final LinkedList<Task> history = new LinkedList<>();
 
     @Override
