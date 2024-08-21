@@ -7,11 +7,11 @@ import tasks.Task;
 import java.util.List;
 
 public interface TaskManager {
-    List<tasks.Task> getListTasks();
+    List<Task> getListTasks();
 
     void deleteAllTask();
 
-    tasks.Task findTask(tasks.Task findTask);
+    tasks.Task findTask(Task findTask);
 
     tasks.Task createTask(tasks.Task newTask);
 
@@ -39,9 +39,7 @@ public interface TaskManager {
 
     SubTask findSubTask(int subtaskId);
 
-    SubTask createSubTask(SubTask newSubTask, Epic epic);
-
-    SubTask updateSubTask(SubTask updateSubTask, Epic epic);
+    SubTask createSubTask(SubTask newSubTask);
 
     SubTask deleteSubTask(Integer id);
 

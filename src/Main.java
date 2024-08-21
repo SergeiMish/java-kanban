@@ -23,9 +23,9 @@ public class Main {
         taskManager.createTask(task);
         taskManager.createTask(task1);
         taskManager.createEpic(epic);
-        taskManager.createSubTask(subTask1, epic);
-        taskManager.createSubTask(subTask2, epic);
-        taskManager.createSubTask(subTask3, epic);
+        taskManager.createSubTask(subTask1);
+        taskManager.createSubTask(subTask2);
+        taskManager.createSubTask(subTask3);
 
         taskManager.getListTasks();
         taskManager.getListEpic();
