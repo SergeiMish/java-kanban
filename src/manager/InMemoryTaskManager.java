@@ -17,16 +17,14 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, SubTask> idToSubTask = new HashMap<>();
     private final HistoryManager historyManager;
 
-    public InMemoryTaskManager() {
-        this.historyManager = Managers.getDefaultHistory();
+    public InMemoryTaskManager(HistoryManager historyManager) {
+
+        this.historyManager = historyManager;
+
     }
 
     @Override
     public List<Task> getListTasks() {
-        Task task = idToTask.get(id);
-        if (task != null) {
-            historyManager.add(task);
-        }
         return new ArrayList<>(idToTask.values());
     }
 
@@ -36,8 +34,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task findTask(int taskId) {
+    public Task getTaskId(int taskId) {
         if (idToTask.containsKey(taskId)) {
+            Task task = idToTask.get(id);
+            if (task != null) {
+                historyManager.add(task);
+            }
             return idToTask.get(taskId);
         } else {
             System.out.println("Такого Id не существует");
@@ -86,13 +88,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic findEpic(int epicId) {
-        if (idToEpic.containsKey(epicId)) {
-            return idToEpic.get(epicId);
-        } else {
-            System.out.println("Такого Id не существует");
-            return null;
+    public Epic getEpicId(int epicId) {
+        Epic epic = idToEpic.get(id);
+        if (epic != null) {
+            historyManager.add(epic);
+            return epic;
         }
+        return null;
     }
 
     @Override
@@ -161,11 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<SubTask> getSubTasks() {
-        SubTask subTask = idToSubTask.get(id);
-        if (subTask != null) {
-            historyManager.add(subTask);
-        }
+    public List<SubTask> getListSubTask() {
         return new ArrayList<>(idToSubTask.values());
     }
 
@@ -178,7 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask findSubTask(int subtaskId) {
+    public SubTask getSubTaskId(int subtaskId) {
         if (idToSubTask.containsKey(subtaskId)) {
             return idToSubTask.get(subtaskId);
         } else {
@@ -202,13 +200,20 @@ public class InMemoryTaskManager implements TaskManager {
         return null;
     }
 
-    public SubTask updateSubTask(SubTask updateSubTask, Epic epic) {
-        int id = updateSubTask.getId();
-        if (idToSubTask.containsKey(id)) {
-            idToSubTask.put(updateSubTask.getId(), updateSubTask);
+    public SubTask updateSubTask(SubTask updateSubTask) {
+        int newId = updateSubTask.getId();
+        if (idToSubTask.containsKey(newId)) {
+            SubTask currentSubtaskId = idToSubTask.get(newId);
+            if (currentSubtaskId.getEpicId() == (updateSubTask.getEpicId())) {
+                idToSubTask.put(newId, updateSubTask);
+                Epic epic = idToEpic.get(updateSubTask.getEpicId());
+                if (epic != null) {
+                    updateEpicStatus(epic.getId());
+                }
+                return updateSubTask;
+            }
         }
-        updateEpicStatus(epic.getId());
-        return updateSubTask;
+        return null;
     }
 
     @Override

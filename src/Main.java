@@ -26,7 +26,8 @@ public class Main {
 
         taskManager.getListTasks();
         taskManager.getListEpic();
-        taskManager.getSubTasks();
+        taskManager.getEpicId(3);
+        taskManager.getListSubTask();
 
         printAllTasks(taskManager);
     }
@@ -45,7 +46,7 @@ public class Main {
                 System.out.println("--> " + subtaskId);
             }
             System.out.println("Подзадачи:");
-            for (Task subtask : manager.getSubTasks()) {
+            for (Task subtask : manager.getListSubTask()) {
                 System.out.println(subtask);
             }
             System.out.println("История:");
