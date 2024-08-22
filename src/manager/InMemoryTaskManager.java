@@ -98,7 +98,6 @@ public class InMemoryTaskManager implements TaskManager {
         return newEpic;
     }
 
-    @Override
     public void updateEpicStatus(int epicId) {
         Epic epic = idToEpic.get(epicId);
         List<Integer> listSubTask = epic.getListSubTask();
@@ -219,8 +218,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Integer> getListSubTasksOfEpic(int epicId) {
-        return idToEpic.containsKey(epicId) ? idToEpic.get(epicId).getListSubTask() : null;
+    public List<SubTask> getListSubTasksOfEpic(int epicId) {
+        Epic epic = idToEpic.get(epicId);
+        if (epic != null) {
+            List<SubTask> subTasks = new ArrayList<>();
+            for (int subTaskId : epic.getListSubTask()) {
+                SubTask subTask = idToSubTask.get(subTaskId);
+                if (subTask != null) {
+                    subTasks.add(subTask);
+                }
+            }
+            return subTasks;
+        }
+        return null;
     }
 
     public List<Task> getHistory() {

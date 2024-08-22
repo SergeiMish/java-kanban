@@ -43,8 +43,8 @@ public class Main {
         for (Task epic : manager.getListEpic()) {
             System.out.println(epic);
 
-            List<Integer> subTaskIds = manager.getListSubTasksOfEpic(epic.getId());
-            for (Integer subtaskId : subTaskIds) {
+            List<SubTask> subTaskIds = manager.getListSubTasksOfEpic(epic.getId());
+            for (SubTask subtaskId : subTaskIds) {
                 System.out.println("--> " + subtaskId);
             }
             System.out.println("Подзадачи:");
