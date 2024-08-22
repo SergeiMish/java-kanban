@@ -24,12 +24,13 @@ public class Main {
         taskManager.createSubTask(subTask2);
         taskManager.createSubTask(subTask3);
 
-        taskManager.getListTasks();
-        taskManager.getListEpic();
-        taskManager.getEpicId(3);
-        taskManager.getSubTaskId(3);
-        taskManager.getSubTaskId(3);
-        taskManager.getListSubTask();
+
+        taskManager.getTaskId(task.getId());
+        taskManager.getTaskId(task1.getId());
+        taskManager.getEpicId(epic.getId());
+        taskManager.getSubTaskId(subTask1.getId());
+        taskManager.getSubTaskId(subTask2.getId());
+        taskManager.getSubTaskId(subTask3.getId());
 
         printAllTasks(taskManager);
     }
@@ -52,10 +53,7 @@ public class Main {
                 System.out.println(subtask);
             }
             System.out.println("История:");
-            /*
-            Если убрать метод getHistory из  и интерфейса TaskMan, а добавлять его через создание обеъкта класса InMemHisMan,
-            то список истории всегда пустой что-бы я ни делал.
-                      */
+
             for (Task task : manager.getHistory()) {
                 System.out.println(task);
             }

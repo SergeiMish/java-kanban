@@ -33,7 +33,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskId(int taskId) {
-        Task task = idToTask.get(id);
+        Task task = idToTask.get(taskId);
         if (task != null) {
             historyManager.add(task);
             return task;
@@ -69,7 +69,6 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Epic> getListEpic() {
         return new ArrayList<>(idToEpic.values());
     }
-
 
     @Override
     public void deleteAllEpic() {
