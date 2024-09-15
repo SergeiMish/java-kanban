@@ -1,11 +1,7 @@
 package tests;
 
-import Interfaces.HistoryManager;
-import Interfaces.TaskManager;
-import manager.InMemoryHistoryManager;
+import interfaces.TaskManager;
 import manager.InMemoryTaskManager;
-import manager.Managers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Status;
 import tasks.Task;

@@ -1,6 +1,6 @@
 package tests;
 
-import Interfaces.TaskManager;
+import interfaces.TaskManager;
 import manager.Managers;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
