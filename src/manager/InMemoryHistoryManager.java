@@ -20,6 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
     void remove(int id){
 
+
     }
 
     @Override
