@@ -18,6 +18,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         history.add(task);
     }
+    void remove(int id){
+
+    }
 
     @Override
     public List<Task> getHistory() {
