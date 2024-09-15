@@ -6,7 +6,7 @@ import tasks.Task;
 
 import java.util.List;
 
-public interface TaskManager {
+public interface taskManager {
     List<Task> getListTasks();
 
     void deleteAllTask();
