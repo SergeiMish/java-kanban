@@ -9,7 +9,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node first;
     private Node last;
     private final Map<Integer, Node> nodeMap = new HashMap<>();
-    private final LinkedList<Task> history = new LinkedList<>();
 
     static class Node {
         Node previous;

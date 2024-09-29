@@ -20,10 +20,10 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "name='" + name + '\'' +
-                ", detail='" + detail + '\'' +
-                ", id=" + id +
-                ", status=" + status +
+                "Название: '" + name + '\'' +
+                ", детали: '" + detail + '\'' +
+                ", id :" + id +
+                ", статус: " + status +
                 '}';
     }
 

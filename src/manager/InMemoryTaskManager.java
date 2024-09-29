@@ -13,6 +13,19 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
 
     private final Map<Integer, Task> idToTask = new HashMap<>();
+
+    public Map<Integer, Task> getIdToTask() {
+        return idToTask;
+    }
+
+    public Map<Integer, Epic> getIdToEpic() {
+        return idToEpic;
+    }
+
+    public Map<Integer, SubTask> getIdToSubTask() {
+        return idToSubTask;
+    }
+
     private final Map<Integer, Epic> idToEpic = new HashMap<>();
     private final Map<Integer, SubTask> idToSubTask = new HashMap<>();
     private final HistoryManager historyManager;
