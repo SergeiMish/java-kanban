@@ -12,7 +12,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
+        File filesOfTasks = new File("filesOfTasks.csv");
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(filesOfTasks);
         Task task = new Task("Поход в магазин", "Покупка молока", Status.NEW);
         Task task1 = new Task("Уборка", "Только кухня", Status.IN_PROGRESS);
         Epic epic = new Epic("Поход в автосалон", "Тест драйв 3-х китайцев", Status.NEW);
@@ -25,8 +26,7 @@ public class Main {
         fileBackedTaskManager.createEpic(epic);
         fileBackedTaskManager.createSubTask(subTask1);
         fileBackedTaskManager.createSubTask(subTask2);
-        File file = new File("C:\\Users\\HP M\\IdeaProjects\\java-kanban\\src\\files\\filesOfTasks.csv");
-        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(file);
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(filesOfTasks);
         printAllTasks(manager);
 
 //        printAllTasks(fileBackedTaskManager);

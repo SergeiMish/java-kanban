@@ -6,16 +6,20 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
+    private final File file;
+
+    public FileBackedTaskManager(File file) {
+        this.file = file;
+    }
+
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager();
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -23,6 +27,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             while ((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
+
                 if (matcher.find()) {
                     String type = matcher.group(1);
                     String name = matcher.group(2);
@@ -56,7 +61,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public void save() {
-        try (FileWriter writer = new FileWriter("C:\\Users\\HP M\\IdeaProjects\\java-kanban\\src\\files\\filesOfTasks.csv")) {
+        try (FileWriter writer = new FileWriter(file)) {
             for (Map.Entry<Integer, Task> entry : getIdToTask().entrySet()) {
                 writer.write((entry.getValue()) + System.lineSeparator());
             }
