@@ -13,19 +13,6 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
 
     private final Map<Integer, Task> idToTask = new HashMap<>();
-
-    public Map<Integer, Task> getIdToTask() {
-        return idToTask;
-    }
-
-    public Map<Integer, Epic> getIdToEpic() {
-        return idToEpic;
-    }
-
-    public Map<Integer, SubTask> getIdToSubTask() {
-        return idToSubTask;
-    }
-
     private final Map<Integer, Epic> idToEpic = new HashMap<>();
     private final Map<Integer, SubTask> idToSubTask = new HashMap<>();
     private final HistoryManager historyManager;
@@ -57,7 +44,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task newTask) {
         int newId = id++;
-        newTask.setId(newId);
+        if (newTask.getId() == 0) {
+            newTask.setId(newId);
+        }
         idToTask.put(newId, newTask);
         return newTask;
     }
@@ -102,7 +91,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic createEpic(Epic newEpic) {
         int newId = id++;
-        newEpic.setId(newId);
+        if (newEpic.getId() == 0) {
+            newEpic.setId(newId);
+        } else {
+            newId = newEpic.getId();
+        }
         idToEpic.put(newId, newEpic);
         if (newEpic.getListSubTask() == null) {
             newEpic.setStatus(Status.NEW);

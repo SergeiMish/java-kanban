@@ -74,4 +74,24 @@ class FileBackedTaskManagerTest {
             fail("Не удалось создать временный файл: " + e.getMessage());
         }
     }
+
+    @Test
+    void loadIdTask() throws IOException {
+        File tempFile = File.createTempFile("loadTasks", null);
+        Files.write(tempFile.toPath(), List.of(
+                "Task{Название: 'Task 1', детали: 'Detail 1', id :3, статус: NEW}",
+                "Task{Название: 'Task 2', детали: 'Detail 2', id :5, статус: IN_PROGRESS}",
+                "Epic{Название: 'Epic 1', детали: 'Epic Detail', id :7, статус: NEW}",
+                "SubTask{Название: 'SubTask 1', детали: 'SubTask Detail', id :4, статус: NEW, epicId: 3}"
+        ));
+
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
+
+        var listTasks = manager.getListTasks();
+        var listEpics = manager.getListEpic();
+        assertEquals(2, listTasks.size(), "Должно быть загружено 2 задачи");
+        System.out.println(listTasks);
+        assertEquals(3, listTasks.get(0).getId());
+        assertEquals(7, listEpics.get(0).getId());
+    }
 }

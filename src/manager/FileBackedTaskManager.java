@@ -6,7 +6,7 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.*;
-import java.util.Map;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +20,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
-
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             Pattern pattern = Pattern.compile("(Task|Epic|SubTask)\\{Название: '(.+?)', детали: '(.+?)', id :([0-9]+), статус: (\\w+)(?:, epicId: ([0-9]+))?\\}");
@@ -62,14 +61,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            for (Map.Entry<Integer, Task> entry : getIdToTask().entrySet()) {
-                writer.write((entry.getValue()) + System.lineSeparator());
+            List<Task> tasks = getListTasks();
+            for (Task task : tasks) {
+                writer.write(task.toString() + System.lineSeparator());
             }
-            for (Map.Entry<Integer, Epic> entry1 : getIdToEpic().entrySet()) {
-                writer.write(entry1.getValue() + System.lineSeparator());
+
+            List<Epic> epics = getListEpic();
+            for (Epic epic : epics) {
+                writer.write(epic.toString() + System.lineSeparator());
             }
-            for (Map.Entry<Integer, SubTask> entry2 : getIdToSubTask().entrySet()) {
-                writer.write(entry2.getValue() + System.lineSeparator());
+
+            List<SubTask> subTasks = getListSubTask();
+            for (SubTask subTask : subTasks) {
+                writer.write(subTask.toString() + System.lineSeparator());
             }
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время записи файла.");
