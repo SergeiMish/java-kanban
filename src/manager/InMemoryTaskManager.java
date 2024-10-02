@@ -44,7 +44,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task newTask) {
         int newId = id++;
-        newTask.setId(newId);
+        if (!newTask.isInitialized()) {
+            newTask.setId(newId);
+        }
         idToTask.put(newId, newTask);
         return newTask;
     }
@@ -89,7 +91,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic createEpic(Epic newEpic) {
         int newId = id++;
-        newEpic.setId(newId);
+        if (!newEpic.isInitialized()) {
+            newEpic.setId(newId);
+        } else {
+            newId = newEpic.getId();
+        }
         idToEpic.put(newId, newEpic);
         if (newEpic.getListSubTask() == null) {
             newEpic.setStatus(Status.NEW);
@@ -177,12 +183,18 @@ public class InMemoryTaskManager implements TaskManager {
     public SubTask createSubTask(SubTask newSubTask) {
         Epic epic = idToEpic.get(newSubTask.getEpicId());
         if (epic != null) {
-            int newId = id++;
-            newSubTask.setId(newId);
-            idToSubTask.put(newId, newSubTask);
-            epic.addSubTask(newId);
-            updateEpicStatus(epic.getId());
+            if (!newSubTask.isInitialized()) {
+                int newId = id++;
+                newSubTask.setId(newId);
+                idToSubTask.put(newId, newSubTask);
+                epic.addSubTask(newId);
+                updateEpicStatus(epic.getId());
 
+                return newSubTask;
+            } else {
+                idToSubTask.put(newSubTask.getId(), newSubTask);
+                updateEpicStatus(epic.getId());
+            }
             return newSubTask;
         }
         return null;

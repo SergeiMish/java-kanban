@@ -6,6 +6,7 @@ public class Task {
     /**
      * Коасс Task с основными параметрами для работы. name,detail,status,id.
      */
+    private boolean initialized = false;
     private String name;
     private String detail;
     private int id;
@@ -20,10 +21,10 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "name='" + name + '\'' +
-                ", detail='" + detail + '\'' +
-                ", id=" + id +
-                ", status=" + status +
+                "Название: '" + name + '\'' +
+                ", детали: '" + detail + '\'' +
+                ", id :" + id +
+                ", статус: " + status +
                 '}';
     }
 
@@ -70,6 +71,11 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+        this.initialized = true;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
     }
 }
 
