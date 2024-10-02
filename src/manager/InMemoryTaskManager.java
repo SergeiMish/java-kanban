@@ -196,7 +196,8 @@ public class InMemoryTaskManager implements TaskManager {
                 updateEpicStatus(epic.getId());
             }
             return newSubTask;
-        } return null;
+        }
+        return null;
     }
 
     public SubTask updateSubTask(SubTask updateSubTask) {
