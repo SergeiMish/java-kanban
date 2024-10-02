@@ -1,7 +1,9 @@
 package tasks;
 
 public class SubTask extends Task {
+
     private final Integer epicId;
+
     public int getEpicId() {
         return epicId;
     }

@@ -1,7 +1,7 @@
 package manager;
 
-import Interfaces.HistoryManager;
-import Interfaces.TaskManager;
+import interfaces.HistoryManager;
+import interfaces.TaskManager;
 
 public class Managers {
     public static TaskManager getDefault() {
