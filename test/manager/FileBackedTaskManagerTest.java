@@ -90,8 +90,7 @@ class FileBackedTaskManagerTest {
         var listTasks = manager.getListTasks();
         var listEpics = manager.getListEpic();
         assertEquals(2, listTasks.size(), "Должно быть загружено 2 задачи");
-        System.out.println(listTasks);
-        assertEquals(3, listTasks.get(0).getId());
-        assertEquals(7, listEpics.get(0).getId());
+        assertEquals(3, listTasks.get(0).getId(), "Неправильный id, дожен быть id = 3");
+        assertEquals(7, listEpics.get(0).getId(), "Неправильный id, дожен быть id = 7");
     }
 }

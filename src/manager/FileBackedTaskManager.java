@@ -1,5 +1,6 @@
 package manager;
 
+import manager.exeptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Status;
 import tasks.SubTask;
@@ -75,8 +76,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (SubTask subTask : subTasks) {
                 writer.write(subTask.toString() + System.lineSeparator());
             }
-        } catch (IOException e) {
-            System.out.println("Произошла ошибка во время записи файла.");
+        }  catch (IOException e) {
+            throw new ManagerSaveException("Произошла ошибка во время записи файла: " + e.getMessage());
         }
     }
 
@@ -88,23 +89,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task createTask(Task newTask) {
-        super.createTask(newTask);
+        Task savedTask = super.createTask(newTask);
         save();
-        return newTask;
+        return savedTask;
     }
 
     @Override
     public Task updateTask(Task updateTask) {
-        super.updateTask(updateTask);
+        Task savedTask = super.updateTask(updateTask);
         save();
-        return updateTask;
+        return savedTask;
     }
 
     @Override
     public Task deleteTask(Integer taskId) {
-        Task task = super.deleteTask(taskId);
+        Task savedTask = super.deleteTask(taskId);
         save();
-        return task;
+        return savedTask;
     }
 
     @Override
@@ -115,9 +116,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic createEpic(Epic newEpic) {
-        super.createEpic(newEpic);
+        Epic savedEpic = super.createEpic(newEpic);
         save();
-        return newEpic;
+        return savedEpic;
     }
 
     @Override
@@ -128,16 +129,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic updateEpic(Epic updateEpic) {
-        super.updateEpic(updateEpic);
+        Epic savedEpic =  super.updateEpic(updateEpic);
         save();
-        return updateEpic;
+        return savedEpic;
     }
 
     @Override
     public Epic deleteEpic(Integer id) {
-        Epic epic = super.deleteEpic(id);
+        Epic savedEpic = super.deleteEpic(id);
         save();
-        return epic;
+        return savedEpic;
     }
 
     @Override
@@ -148,22 +149,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public SubTask createSubTask(SubTask newSubTask) {
-        super.createSubTask(newSubTask);
+        SubTask savedSubTask = super.createSubTask(newSubTask);
         save();
-        return newSubTask;
+        return savedSubTask;
     }
 
     @Override
     public SubTask updateSubTask(SubTask updateSubTask) {
-        super.updateSubTask(updateSubTask);
+        SubTask savedSubTask = super.updateSubTask(updateSubTask);
         save();
-        return updateSubTask;
+        return savedSubTask;
     }
 
     @Override
     public SubTask deleteSubTask(Integer id) {
-        SubTask subTask = super.deleteSubTask(id);
+        SubTask savedSubTask = super.deleteSubTask(id);
         save();
-        return subTask;
+        return savedSubTask;
     }
 }
