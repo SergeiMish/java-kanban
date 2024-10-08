@@ -7,6 +7,8 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class Main {
@@ -14,8 +16,10 @@ public class Main {
         TaskManager taskManager = Managers.getDefault();
         File filesOfTasks = new File("filesOfTasks.csv");
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(filesOfTasks);
-        Task task = new Task("Поход в магазин", "Покупка молока", Status.NEW);
-        Task task1 = new Task("Уборка", "Только кухня", Status.IN_PROGRESS);
+        LocalDate date = LocalDate.of(2024, 10, 23);
+        LocalTime time = LocalTime.of(15, 30);
+        Task task = new Task("Поход в магазин", "Покупка молока", date, time, 30, Status.NEW );
+        Task task1 = new Task("Уборка", "Только кухня", duration, startTime, Status.IN_PROGRESS);
         Epic epic = new Epic("Поход в автосалон", "Тест драйв 3-х китайцев", Status.NEW);
         SubTask subTask1 = new SubTask("Haval", "в 10.00", Status.NEW, 3);
         SubTask subTask2 = new SubTask("Changan", "14.00", Status.NEW, 3);

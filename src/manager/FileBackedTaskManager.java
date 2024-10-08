@@ -23,7 +23,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            Pattern pattern = Pattern.compile("(Task|Epic|SubTask)\\{Название: '(.+?)', детали: '(.+?)', id :([0-9]+), статус: (\\w+)(?:, epicId: ([0-9]+))?\\}");
+            Pattern pattern = Pattern.compile("(Task|Epic|SubTask)\\{Название: '(.+?)', детали: '(.+?)', " +
+                    "LocalDate\\.of\\((\\d{4}), (\\d{1,2}), (\\d{1,2})\\), \" +\n" +
+                    "    \"LocalTime\\.of\\((\\d{1,2}), (\\d{1,2})\\), (\\d+) , " +
+                    "id :([0-9]+), статус: (\\w+)(?:, epicId: ([0-9]+))?\\}");
 
             while ((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
@@ -34,9 +37,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     String detail = matcher.group(3);
                     int id = Integer.parseInt(matcher.group(4));
                     Status status = Status.valueOf(matcher.group(5));
+
+
                     switch (type) {
                         case "Task" -> {
-                            Task task = new Task(name, detail, status);
+                            Task task = new Task(name, detail, duration, startTime, status);
                             task.setId(id);
                             manager.createTask(task);
                         }

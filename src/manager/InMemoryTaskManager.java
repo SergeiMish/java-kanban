@@ -7,6 +7,8 @@ import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -101,6 +103,28 @@ public class InMemoryTaskManager implements TaskManager {
             newEpic.setStatus(Status.NEW);
         }
         return newEpic;
+    }
+
+    public LocalDateTime getEndTimeEpic(int epicId) {
+        Epic epic = idToEpic.get(epicId);
+        if (epic == null) {
+            return null;
+        }
+
+        List<Integer> listSubTask = epic.getListSubTask();
+        LocalDateTime EndTime = null;
+
+        for (Integer subTaskId : listSubTask) {
+            SubTask subTask = idToSubTask.get(subTaskId);
+            if (subTask == null) continue;
+
+            LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
+            if (EndTime == null || subTaskEndTime.isAfter(EndTime)) {
+                EndTime = subTaskEndTime;
+            }
+        }
+
+        return EndTime;
     }
 
     public void updateEpicStatus(int epicId) {

@@ -1,7 +1,6 @@
 package manager;
 
 import interfaces.TaskManager;
-import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Status;
 import tasks.Task;
@@ -16,8 +15,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void addHistoryTask() {
-        Task task1 = new Task("Имя", "Детали", Status.NEW);
-        Task task2 = new Task("Имя 2", "Детали 2", Status.NEW);
+        Task task1 = new Task("Имя", "Детали", duration, startTime, Status.NEW);
+        Task task2 = new Task("Имя 2", "Детали 2", duration, startTime, Status.NEW);
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -35,8 +34,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void testHistoryPreservesPreviousVersionTask() {
-        Task task = new Task("Имя", "Детали", Status.NEW);
-        Task taskUpdate = new Task("Имя2", "Детали", Status.NEW);
+        Task task = new Task("Имя", "Детали", duration, startTime, Status.NEW);
+        Task taskUpdate = new Task("Имя2", "Детали", duration, startTime, Status.NEW);
 
         taskManager.createTask(task);
         taskManager.getTaskId(task.getId());

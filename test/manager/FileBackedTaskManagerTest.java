@@ -37,8 +37,8 @@ class FileBackedTaskManagerTest {
             File tempFile = File.createTempFile("multipleTasks", null);
             FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
-            Task task1 = new Task("Task 1", "Detail 1", Status.NEW);
-            Task task2 = new Task("Task 2", "Detail 2", Status.IN_PROGRESS);
+            Task task1 = new Task("Task 1", "Detail 1", duration, startTime, Status.NEW);
+            Task task2 = new Task("Task 2", "Detail 2", duration, startTime, Status.IN_PROGRESS);
             Epic epic = new Epic("Epic 1", "Epic Detail", Status.NEW);
             SubTask subTask = new SubTask("SubTask 1", "SubTask Detail", Status.NEW, 3);
 

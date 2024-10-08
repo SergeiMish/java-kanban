@@ -24,7 +24,7 @@ public class TaskTest {
 
     @Test
     void createNewTask() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
+        Task task = new Task("Test addNewTask", "Test addNewTask description", duration, startTime, Status.NEW);
         final Task createdTask = taskManager.createTask(task);
 
         final Task savedTask = taskManager.getTaskId(createdTask.getId());
@@ -41,8 +41,8 @@ public class TaskTest {
 
     @Test
     void testTasksEquals() {
-        Task task1 = new Task("Имя1", "детали", NEW);
-        Task task2 = new Task("Имя2", "детали", NEW);
+        Task task1 = new Task("Имя1", "детали", duration, startTime, NEW);
+        Task task2 = new Task("Имя2", "детали", duration, startTime, NEW);
         task1.setId(1);
         task2.setId(1);
         assertEquals(task1.getId(), task2.getId(), "Задачи имеют одинаковый ID");
@@ -68,8 +68,8 @@ public class TaskTest {
 
     @Test
     void testTaskIdConflict() {
-        Task task1 = new Task("Имя1", "детали", NEW);
-        Task task2 = new Task("Имя2", "детали", NEW);
+        Task task1 = new Task("Имя1", "детали", duration, startTime, NEW);
+        Task task2 = new Task("Имя2", "детали", duration, startTime, NEW);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         assertEquals(task1, taskManager.getListTasks().get(0));

@@ -1,5 +1,8 @@
 package tasks;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class SubTask extends Task {
 
     private final Integer epicId;
@@ -8,8 +11,8 @@ public class SubTask extends Task {
         return epicId;
     }
 
-    public SubTask(String name, String detail, Status status, Integer epicId) {
-        super(name, detail, status);
+    public SubTask(String name, String detail, LocalDate date, LocalTime time, int minute, Status status, Integer epicId) {
+        super(name, detail, date, time, minute, status);
         this.epicId = epicId;
     }
 
