@@ -1,5 +1,6 @@
 import interfaces.TaskManager;
 import manager.FileBackedTaskManager;
+import manager.InMemoryTaskManager;
 import manager.Managers;
 import tasks.Epic;
 import tasks.Status;
@@ -14,37 +15,34 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
         File filesOfTasks = new File("filesOfTasks.csv");
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(filesOfTasks);
-        LocalDate date = LocalDate.of(2024, 10, 23);
-        LocalTime time = LocalTime.of(15, 30);
-        Task task = new Task("Поход в магазин", "Покупка молока", date, time, 30, Status.NEW );
-        Task task1 = new Task("Уборка", "Только кухня", duration, startTime, Status.IN_PROGRESS);
-        Epic epic = new Epic("Поход в автосалон", "Тест драйв 3-х китайцев", Status.NEW);
-        SubTask subTask1 = new SubTask("Haval", "в 10.00", Status.NEW, 3);
-        SubTask subTask2 = new SubTask("Changan", "14.00", Status.NEW, 3);
-        SubTask subTask3 = new SubTask("Cherry", "Лучше совсем не ходить", Status.NEW, 3);
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        LocalDate date1 = LocalDate.of(2024, 10, 23);
+        LocalTime time1 = LocalTime.of(15, 30);
+        LocalDate date2 = LocalDate.of(2024, 11, 23);
+        LocalTime time2 = LocalTime.of(15, 30);
+        LocalDate date3 = LocalDate.of(2024, 12, 23);
+        LocalTime time3 = LocalTime.of(15, 30);
+        Task task = new Task("Поход в магазин", "Покупка молока", date, time, 30, Status.NEW);
+        Task task1 = new Task("Уборка", "Только кухня", date1, time1, 30, Status.IN_PROGRESS);
+        Epic epic = new Epic("Поход в автосалон", "Тест драйв 3-х китайцев", date, time, 30, Status.NEW);
+        SubTask subTask1 = new SubTask("Haval", "в 10.00", date2, time2, 40, Status.NEW, 3);
+        SubTask subTask2 = new SubTask("Changan", "14.00", date3, time3, 50, Status.NEW, 3);
+//        SubTask subTask3 = new SubTask("Cherry", "Лучше совсем не ходить", date, time, 30, Status.NEW, 3);
 
         fileBackedTaskManager.createTask(task);
         fileBackedTaskManager.createTask(task1);
         fileBackedTaskManager.createEpic(epic);
         fileBackedTaskManager.createSubTask(subTask1);
         fileBackedTaskManager.createSubTask(subTask2);
-        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(filesOfTasks);
-        printAllTasks(manager);
+//        fileBackedTaskManager.createSubTask(subTask3);
+        fileBackedTaskManager.getPrioritizedTasks();
+        fileBackedTaskManager.getPrioritizedTasks();
+        printAllTasks(fileBackedTaskManager);
 
-//        printAllTasks(fileBackedTaskManager);
-//        taskManager.createSubTask(subTask3);
-//
-//
-//        taskManager.getTaskId(task.getId());
-//        taskManager.getTaskId(task1.getId());
-//        taskManager.getEpicId(epic.getId());
-//        taskManager.getSubTaskId(subTask1.getId());
-//        taskManager.getSubTaskId(subTask2.getId());
-//        taskManager.getSubTaskId(subTask3.getId());
-//
-//        printAllTasks(taskManager);
     }
 
     private static void printAllTasks(TaskManager manager) {

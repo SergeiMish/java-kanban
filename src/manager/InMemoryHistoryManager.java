@@ -3,22 +3,15 @@ package manager;
 import interfaces.HistoryManager;
 import tasks.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
+    private final Map<Integer, Node> nodeMap = new HashMap<>();
     private Node first;
     private Node last;
-    private final Map<Integer, Node> nodeMap = new HashMap<>();
-
-    static class Node {
-        Node previous;
-        Node next;
-        Task value;
-
-        Node(Task value) {
-            this.value = value;
-        }
-    }
 
     @Override
     public void add(Task task) {
@@ -77,5 +70,15 @@ public class InMemoryHistoryManager implements HistoryManager {
             current = current.next;
         }
         return history;
+    }
+
+    static class Node {
+        Node previous;
+        Node next;
+        Task value;
+
+        Node(Task value) {
+            this.value = value;
+        }
     }
 }

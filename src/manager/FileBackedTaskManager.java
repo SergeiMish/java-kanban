@@ -7,6 +7,8 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,10 +25,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            Pattern pattern = Pattern.compile("(Task|Epic|SubTask)\\{Название: '(.+?)', детали: '(.+?)', " +
-                    "LocalDate\\.of\\((\\d{4}), (\\d{1,2}), (\\d{1,2})\\), \" +\n" +
-                    "    \"LocalTime\\.of\\((\\d{1,2}), (\\d{1,2})\\), (\\d+) , " +
-                    "id :([0-9]+), статус: (\\w+)(?:, epicId: ([0-9]+))?\\}");
+            Pattern pattern = Pattern.compile("(Task|Epic|SubTask)\\{name='(.+?)', detail='(.+?)', id=([0-9]+)," +
+                    " status=(\\w+), duration=PT(\\d+)M, " +
+                    "date=(\\d{4}-\\d{2}-\\d{2}), " +
+                    "time=(\\d{2}:\\d{2})(?:, epicId: ([0-9]+))?\\}");
 
             while ((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
@@ -37,22 +39,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     String detail = matcher.group(3);
                     int id = Integer.parseInt(matcher.group(4));
                     Status status = Status.valueOf(matcher.group(5));
-
+                    int duration = Integer.parseInt(matcher.group(6));
+                    LocalDate date = LocalDate.parse(matcher.group(7));
+                    LocalTime time = LocalTime.parse(matcher.group(8));
 
                     switch (type) {
                         case "Task" -> {
-                            Task task = new Task(name, detail, duration, startTime, status);
+                            Task task = new Task(name, detail, date, time, duration, status);
                             task.setId(id);
                             manager.createTask(task);
                         }
                         case "Epic" -> {
-                            Epic epic = new Epic(name, detail, status);
+                            Epic epic = new Epic(name, detail, date, time, duration, status);
                             epic.setId(id);
                             manager.createEpic(epic);
                         }
                         case "SubTask" -> {
-                            int epicId = Integer.parseInt(matcher.group(6));
-                            SubTask subTask = new SubTask(name, detail, status, epicId);
+                            int epicId = Integer.parseInt(matcher.group(9));
+                            SubTask subTask = new SubTask(name, detail, date, time, duration, status, epicId);
                             subTask.setId(id);
                             manager.createSubTask(subTask);
                         }
@@ -81,7 +85,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (SubTask subTask : subTasks) {
                 writer.write(subTask.toString() + System.lineSeparator());
             }
-        }  catch (IOException e) {
+        } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла: " + e.getMessage());
         }
     }
@@ -134,7 +138,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Epic updateEpic(Epic updateEpic) {
-        Epic savedEpic =  super.updateEpic(updateEpic);
+        Epic savedEpic = super.updateEpic(updateEpic);
         save();
         return savedEpic;
     }
