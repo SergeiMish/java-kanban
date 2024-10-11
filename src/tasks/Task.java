@@ -11,17 +11,13 @@ public class Task {
     private final LocalDateTime startTime;
     private final LocalDate date;
     private final LocalTime time;
-    /**
-     * Коасс Task с основными параметрами для работы. name,detail,status,id.
-     */
     private boolean initialized = false;
     private String name;
     private String detail;
     private int id;
     private Status status;
 
-    public Task(String name, String detail,
-                LocalDate date, LocalTime time, int minute, Status status) {
+    public Task(String name, String detail, LocalDate date, LocalTime time, Integer minute, Status status) {
         this.name = name;
         this.detail = detail;
         this.date = date;
