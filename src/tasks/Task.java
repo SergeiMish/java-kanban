@@ -20,8 +20,8 @@ public class Task {
     private int id;
     private Status status;
 
-    public Task (String name, String detail, LocalDate date, LocalTime time, int minute, Status status) {
 
+    public Task (String name, String detail, LocalDate date, LocalTime time, int minute, Status status) {
         this.name = name;
         this.detail = detail;
         this.date = date;
