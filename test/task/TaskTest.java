@@ -17,7 +17,7 @@ import static tasks.Status.*;
 
 public class TaskTest {
 
-    TaskManager taskManager = new InMemoryTaskManager();
+    InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     LocalDate date = LocalDate.now();
     LocalTime time = LocalTime.now();
