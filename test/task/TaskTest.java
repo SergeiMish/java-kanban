@@ -1,6 +1,5 @@
 package task;
 
-import interfaces.TaskManager;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -89,7 +88,6 @@ public class TaskTest {
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask1);
-        taskManager.updateEpicStatus(epic.getId());
 
         assertEquals(NEW, epic.getStatus(), "Статус должен быть NEW");
     }
@@ -103,7 +101,6 @@ public class TaskTest {
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask1);
-        taskManager.updateEpicStatus(epic.getId());
 
         assertEquals(DONE, epic.getStatus(), "Статус должен быть DONE");
     }
@@ -117,7 +114,6 @@ public class TaskTest {
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask1);
-        taskManager.updateEpicStatus(epic.getId());
 
         assertEquals(IN_PROGRESS, epic.getStatus(), "Статус должен быть IN_PROGRESS");
     }
@@ -131,7 +127,6 @@ public class TaskTest {
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
         taskManager.createSubTask(subTask1);
-        taskManager.updateEpicStatus(epic.getId());
 
         assertEquals(IN_PROGRESS, epic.getStatus(), "Статус должен быть IN_PROGRESS");
     }
@@ -148,8 +143,9 @@ public class TaskTest {
     @Test
     void testIntervalOverlap() {
         Task task1 = new Task("Task 1", "Detail", LocalDate.now(), LocalTime.of(10, 0), 60, Status.NEW);
-        Task task2 = new Task("Task 2", "Detail", LocalDate.now(), LocalTime.of(10, 30), 60, Status.NEW);
+        Task task2 = new Task("Task 2", "Detail", LocalDate.now(), LocalTime.of(11, 30), 60, Status.NEW);
         taskManager.createTask(task1);
+        taskManager.createTask(task2);
         assertThrows(IllegalArgumentException.class, () -> taskManager.createTask(task2));
     }
 }

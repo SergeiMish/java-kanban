@@ -131,12 +131,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateEpicStatus(int epicId) {
-        super.updateEpicStatus(epicId);
-        save();
-    }
-
-    @Override
     public Epic updateEpic(Epic updateEpic) {
         Epic savedEpic = super.updateEpic(updateEpic);
         save();

@@ -21,12 +21,12 @@ public class Epic extends Task {
 
     public void addSubTask(Task subTask) {
         listSubTask.add(subTask.getId());
-        recalculateTimes(subTask, true);
+        addSubTaskTimes(subTask);
     }
 
-    public void removeSubTask(Task subTask) {
+    public void removeSubTask(Task subTask, List<Task> allSubTasks) {
         listSubTask.remove(Integer.valueOf(subTask.getId()));
-        recalculateTimes(subTask, false);
+        removeSubTaskTimes(subTask, allSubTasks);
     }
 
     public List<Integer> getListSubTask() {
@@ -40,18 +40,35 @@ public class Epic extends Task {
         endTime = null;
     }
 
-    private void recalculateTimes(Task subTask, boolean isAdding) {
-        if (isAdding) {
-            duration = duration.plus(subTask.getDuration());
-            if (startTime == null || subTask.getStartTime().isBefore(startTime)) {
-                startTime = subTask.getStartTime();
+    private void addSubTaskTimes(Task subTask) {
+        duration = duration.plus(subTask.getDuration());
+        if (startTime == null || subTask.getStartTime().isBefore(startTime)) {
+            startTime = subTask.getStartTime();
+        }
+        LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
+        if (endTime == null || subTaskEndTime.isAfter(endTime)) {
+            endTime = subTaskEndTime;
+        }
+    }
+
+    private void removeSubTaskTimes(Task subTask, List<Task> allSubTasks) {
+        duration = duration.minus(subTask.getDuration());
+        recalculateStartAndEndTime(allSubTasks);
+    }
+
+    private void recalculateStartAndEndTime(List<Task> allSubTasks) {
+        startTime = null;
+        endTime = null;
+        for (Task subTask : allSubTasks) {
+            if (listSubTask.contains(subTask.getId())) {
+                if (startTime == null || subTask.getStartTime().isBefore(startTime)) {
+                    startTime = subTask.getStartTime();
+                }
+                LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
+                if (endTime == null || subTaskEndTime.isAfter(endTime)) {
+                    endTime = subTaskEndTime;
+                }
             }
-            LocalDateTime subTaskEndTime = subTask.getStartTime().plus(subTask.getDuration());
-            if (endTime == null || subTaskEndTime.isAfter(endTime)) {
-                endTime = subTaskEndTime;
-            }
-        } else {
-            duration = duration.minus(subTask.getDuration());
         }
     }
 
