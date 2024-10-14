@@ -82,8 +82,8 @@ public class TaskTest {
     @Test
     void allSubtasksNew() {
         Epic epic = new Epic("Epic 1", "Epic Detail", date, time, 30, Status.NEW);
-        SubTask subTask = new SubTask("SubTask", "SubTask Detail", date1, time1, 30, Status.NEW, epic.getId());
-        SubTask subTask1 = new SubTask("SubTask 2", "SubTask Detail", date2, time2, 30, Status.NEW, epic.getId());
+        SubTask subTask = new SubTask("SubTask", "SubTask Detail", date1, time1, 30, Status.NEW, 1);
+        SubTask subTask1 = new SubTask("SubTask 2", "SubTask Detail", date2, time2, 30, Status.NEW, 1);
 
         taskManager.createEpic(epic);
         taskManager.createSubTask(subTask);
