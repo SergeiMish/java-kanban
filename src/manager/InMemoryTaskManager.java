@@ -94,8 +94,13 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (existingTask != null) {
             removeTaskFromPrioritized(existingTask);
-            idToTask.put(taskId, updatedTask);
-            addTaskToPrioritized(updatedTask);
+            if (canAddTask(updatedTask)) {
+                idToTask.put(taskId, updatedTask);
+                addTaskToPrioritized(updatedTask);
+            } else {
+                addTaskToPrioritized(existingTask);
+                throw new IllegalArgumentException("Обновленная задача пересекается по времени с существующими задачами");
+            }
         }
         return updatedTask;
     }
@@ -265,15 +270,21 @@ public class InMemoryTaskManager implements TaskManager {
         if (existingSubTask != null) {
 
             removeTaskFromPrioritized(existingSubTask);
-            idToSubTask.put(subTaskId, updatedSubTask);
-            addTaskToPrioritized(updatedSubTask);
 
-            Epic epic = idToEpic.get(updatedSubTask.getEpicId());
+            if (canAddTask(updatedSubTask)) {
+                idToSubTask.put(subTaskId, updatedSubTask);
+                addTaskToPrioritized(updatedSubTask);
 
-            if (epic != null) {
-                epic.removeSubTask(existingSubTask.getEpicId());
-                epic.addSubTask(updatedSubTask);
-                updateEpicStatus(epic.getId());
+                Epic epic = idToEpic.get(updatedSubTask.getEpicId());
+                if (epic != null) {
+                    epic.removeSubTask(existingSubTask.getId());
+                    epic.addSubTask(updatedSubTask);
+                    updateEpicStatus(epic.getId());
+                    updateEpicTimes(epic);
+                }
+            } else {
+                addTaskToPrioritized(existingSubTask);
+                throw new IllegalArgumentException("Обновленная подзадача пересекается по времени с существующими задачами");
             }
         }
         return updatedSubTask;
