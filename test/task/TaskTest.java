@@ -25,6 +25,7 @@ public class TaskTest {
     LocalDate date2 = LocalDate.of(2024, 11, 23);
     LocalTime time2 = LocalTime.of(15, 30);
 
+
     @Test
     void createNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", date, time, 30, Status.NEW);

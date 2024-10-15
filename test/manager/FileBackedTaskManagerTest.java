@@ -1,5 +1,6 @@
 package manager;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -16,17 +17,33 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
-    LocalDate date = LocalDate.now();
-    LocalTime time = LocalTime.now();
-    LocalDate date1 = LocalDate.of(2024, 10, 23);
-    LocalTime time1 = LocalTime.of(15, 30);
-    LocalDate date2 = LocalDate.of(2024, 11, 23);
-    LocalTime time2 = LocalTime.of(15, 30);
-    LocalDate date3 = LocalDate.of(2024, 12, 23);
-    LocalTime time3 = LocalTime.of(15, 30);
 
-    @Override
-    public void setUp() {
+    private LocalDate date;
+    private LocalTime time;
+    private LocalDate date1;
+    private LocalTime time1;
+    private LocalDate date2;
+    private LocalTime time2;
+    private LocalDate date3;
+    private LocalTime time3;
+
+    @BeforeEach
+    void setUp() {
+        try {
+            File tempFile = File.createTempFile("taskManagerData", null);
+            taskManager = new FileBackedTaskManager(tempFile); // Инициализация taskManager
+        } catch (IOException e) {
+            fail("Не удалось создать временный файл: " + e.getMessage());
+        }
+        super.setUp();
+        date = LocalDate.now();
+        time = LocalTime.now();
+        date1 = LocalDate.of(2024, 10, 23);
+        time1 = LocalTime.of(15, 30);
+        date2 = LocalDate.of(2024, 11, 23);
+        time2 = LocalTime.of(12, 30);
+        date3 = LocalDate.of(2024, 12, 23);
+        time3 = LocalTime.of(15, 30);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package manager;
 
 import interfaces.HistoryManager;
-import interfaces.TaskManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Status;
 import tasks.Task;
@@ -12,16 +12,27 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryHistoryManagerTest {
+public class InMemoryHistoryManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+    private HistoryManager historyManager;
+    private LocalDate date;
+    private LocalTime time;
+    private LocalDate date1;
+    private LocalTime time1;
+    private LocalDate date2;
+    private LocalTime time2;
 
-    TaskManager taskManager = new InMemoryTaskManager();
-    HistoryManager historyManager = new InMemoryHistoryManager();
-    LocalDate date = LocalDate.now();
-    LocalTime time = LocalTime.now();
-    LocalDate date1 = LocalDate.of(2024, 10, 23);
-    LocalTime time1 = LocalTime.of(15, 30);
-    LocalDate date2 = LocalDate.of(2024, 11, 23);
-    LocalTime time2 = LocalTime.of(12, 30);
+    @BeforeEach
+    void setUp() {
+        taskManager = new InMemoryTaskManager(); // Инициализация taskManager
+        historyManager = new InMemoryHistoryManager(); // Инициализация historyManager
+        super.setUp();
+        date = LocalDate.now();
+        time = LocalTime.now();
+        date1 = LocalDate.of(2024, 10, 23);
+        time1 = LocalTime.of(15, 30);
+        date2 = LocalDate.of(2024, 11, 23);
+        time2 = LocalTime.of(12, 30);
+    }
 
     @Test
     void addHistoryTask() {
