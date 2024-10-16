@@ -1,23 +1,43 @@
 package manager;
 
-import interfaces.TaskManager;
-import manager.InMemoryTaskManager;
+import interfaces.HistoryManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Status;
 import tasks.Task;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryHistoryManagerTest {
+public class InMemoryHistoryManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+    private HistoryManager historyManager;
+    private LocalDate date;
+    private LocalTime time;
+    private LocalDate date1;
+    private LocalTime time1;
+    private LocalDate date2;
+    private LocalTime time2;
 
-    TaskManager taskManager = new InMemoryTaskManager();
+    @BeforeEach
+    void setUp() {
+        taskManager = new InMemoryTaskManager(); // Инициализация taskManager
+        historyManager = new InMemoryHistoryManager(); // Инициализация historyManager
+        super.setUp();
+        date = LocalDate.now();
+        time = LocalTime.now();
+        date1 = LocalDate.of(2024, 10, 23);
+        time1 = LocalTime.of(15, 30);
+        date2 = LocalDate.of(2024, 11, 23);
+        time2 = LocalTime.of(12, 30);
+    }
 
     @Test
     void addHistoryTask() {
-        Task task1 = new Task("Имя", "Детали", Status.NEW);
-        Task task2 = new Task("Имя 2", "Детали 2", Status.NEW);
+        Task task1 = new Task("Имя", "Детали", date, time, 30, Status.NEW);
+        Task task2 = new Task("Имя 2", "Детали 2", date1, time1, 30, Status.NEW);
 
         taskManager.createTask(task1);
         taskManager.createTask(task2);
@@ -35,8 +55,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void testHistoryPreservesPreviousVersionTask() {
-        Task task = new Task("Имя", "Детали", Status.NEW);
-        Task taskUpdate = new Task("Имя2", "Детали", Status.NEW);
+        Task task = new Task("Имя", "Детали", date, time, 30, Status.NEW);
+        Task taskUpdate = new Task("Имя2", "Детали", date, time, 30, Status.NEW);
 
         taskManager.createTask(task);
         taskManager.getTaskId(task.getId());
@@ -49,5 +69,37 @@ class InMemoryHistoryManagerTest {
 
         assertEquals(1, history.size(), "История должна содержать только одну задачу.");
         assertEquals(taskUpdate, history.get(0), "История должна содержать последнюю версию задачи.");
+    }
+
+    @Test
+    void emptyHistory() {
+        assertTrue(historyManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void duplicateHistory() {
+        Task task = new Task("Task", "Detail", LocalDate.now(), LocalTime.now(), 30, Status.NEW);
+        historyManager.add(task);
+        historyManager.add(task);
+        assertEquals(1, historyManager.getHistory().size());
+    }
+
+    @Test
+    void removeFromHistory() {
+        Task task1 = new Task("Task 1", "Detail", date, time, 30, Status.NEW);
+        Task task2 = new Task("Task 2", "Detail", date1, time1, 30, Status.NEW);
+        Task task3 = new Task("Task 3", "Detail", date2, time2, 30, Status.NEW);
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+        historyManager.remove(task1.getId());
+        assertEquals(2, historyManager.getHistory().size());
+        historyManager.remove(task2.getId());
+        assertEquals(1, historyManager.getHistory().size());
+        historyManager.remove(task3.getId());
+        assertTrue(historyManager.getHistory().isEmpty());
     }
 }

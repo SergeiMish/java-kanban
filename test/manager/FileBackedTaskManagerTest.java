@@ -1,5 +1,6 @@
 package manager;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -9,12 +10,41 @@ import tasks.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
+    private LocalDate date;
+    private LocalTime time;
+    private LocalDate date1;
+    private LocalTime time1;
+    private LocalDate date2;
+    private LocalTime time2;
+    private LocalDate date3;
+    private LocalTime time3;
+
+    @BeforeEach
+    void setUp() {
+        try {
+            File tempFile = File.createTempFile("taskManagerData", null);
+            taskManager = new FileBackedTaskManager(tempFile); // Инициализация taskManager
+        } catch (IOException e) {
+            fail("Не удалось создать временный файл: " + e.getMessage());
+        }
+        super.setUp();
+        date = LocalDate.now();
+        time = LocalTime.now();
+        date1 = LocalDate.of(2024, 10, 23);
+        time1 = LocalTime.of(15, 30);
+        date2 = LocalDate.of(2024, 11, 23);
+        time2 = LocalTime.of(12, 30);
+        date3 = LocalDate.of(2024, 12, 23);
+        time3 = LocalTime.of(15, 30);
+    }
 
     @Test
     void loadFromEmptyFile() {
@@ -37,10 +67,10 @@ class FileBackedTaskManagerTest {
             File tempFile = File.createTempFile("multipleTasks", null);
             FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
 
-            Task task1 = new Task("Task 1", "Detail 1", Status.NEW);
-            Task task2 = new Task("Task 2", "Detail 2", Status.IN_PROGRESS);
-            Epic epic = new Epic("Epic 1", "Epic Detail", Status.NEW);
-            SubTask subTask = new SubTask("SubTask 1", "SubTask Detail", Status.NEW, 3);
+            Task task1 = new Task("Task 1", "Detail 1", date, time, 30, Status.NEW);
+            Task task2 = new Task("Task 2", "Detail 2", date1, time1, 30, Status.IN_PROGRESS);
+            Epic epic = new Epic("Epic 1", "Epic Detail", date2, time2, 30, Status.NEW);
+            SubTask subTask = new SubTask("SubTask 1", "SubTask Detail", date3, time3, 30, Status.NEW, 3);
 
             manager.createTask(task1);
             manager.createTask(task2);
@@ -59,10 +89,10 @@ class FileBackedTaskManagerTest {
         try {
             File tempFile = File.createTempFile("loadTasks", null);
             Files.write(tempFile.toPath(), List.of(
-                    "Task{Название: 'Task 1', детали: 'Detail 1', id :1, статус: NEW}",
-                    "Task{Название: 'Task 2', детали: 'Detail 2', id :2, статус: IN_PROGRESS}",
-                    "Epic{Название: 'Epic 1', детали: 'Epic Detail', id :3, статус: NEW}",
-                    "SubTask{Название: 'SubTask 1', детали: 'SubTask Detail', id :4, статус: NEW, epicId: 3}"
+                    "Task{name='Task1', detail='Detail1', id=1, status=NEW, duration=PT30M, date=2024-10-23, time=15:30}",
+                    "Task{name='Task2', detail='Detail2', id=2, status=NEW, duration=PT30M, date=2024-10-11, time=15:38}",
+                    "Epic{name='Epic', detail='Detail', id=3, status=NEW, duration=PT30M, date=2024-10-11, time=15:38}",
+                    "SubTask{name='SubTask', detail='Detail', id=4, status=NEW, duration=PT40M, date=2024-11-23, time=15:30, epicId: 3}"
             ));
 
             FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
@@ -79,10 +109,10 @@ class FileBackedTaskManagerTest {
     void loadIdTask() throws IOException {
         File tempFile = File.createTempFile("loadTasks", null);
         Files.write(tempFile.toPath(), List.of(
-                "Task{Название: 'Task 1', детали: 'Detail 1', id :3, статус: NEW}",
-                "Task{Название: 'Task 2', детали: 'Detail 2', id :5, статус: IN_PROGRESS}",
-                "Epic{Название: 'Epic 1', детали: 'Epic Detail', id :7, статус: NEW}",
-                "SubTask{Название: 'SubTask 1', детали: 'SubTask Detail', id :4, статус: NEW, epicId: 3}"
+                "Task{name='Task1', detail='Detail1', id=3, status=NEW, duration=PT30M, date=2024-10-23, time=15:30}",
+                "Task{name='Task2', detail='Detail2', id=5, status=NEW, duration=PT30M, date=2024-10-11, time=15:38}",
+                "Epic{name='Epic', detail='Detail', id=7, status=NEW, duration=PT30M, date=2024-10-11, time=15:38}",
+                "SubTask{name='SubTask', detail='Detail', id=4, status=NEW, duration=PT40M, date=2024-11-23, time=15:30, epicId: 7}"
         ));
 
         FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(tempFile);
@@ -90,7 +120,7 @@ class FileBackedTaskManagerTest {
         var listTasks = manager.getListTasks();
         var listEpics = manager.getListEpic();
         assertEquals(2, listTasks.size(), "Должно быть загружено 2 задачи");
-        assertEquals(3, listTasks.get(0).getId(), "Неправильный id, дожен быть id = 3");
-        assertEquals(7, listEpics.get(0).getId(), "Неправильный id, дожен быть id = 7");
+        assertEquals(3, listTasks.get(0).getId(), "Неправильный id, должен быть id = 3");
+        assertEquals(7, listEpics.get(0).getId(), "Неправильный id, должен быть id = 7");
     }
 }
