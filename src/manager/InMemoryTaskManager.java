@@ -144,7 +144,6 @@ public class InMemoryTaskManager implements TaskManager {
             newId = newEpic.getId();
         }
         idToEpic.put(newId, newEpic);
-        addTaskToPrioritized(newEpic);
         if (newEpic.getListSubTask() == null) {
             newEpic.setStatus(Status.NEW);
         }
@@ -213,7 +212,6 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = idToEpic.remove(id);
         if (epic != null) {
             epic.getListSubTask().forEach(idToSubTask::remove);
-            removeTaskFromPrioritized(epic);
         }
         return epic;
     }
