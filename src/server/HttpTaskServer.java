@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsServer;
 import interfaces.TaskManager;
 import manager.Managers;
@@ -12,7 +13,7 @@ public class HttpTaskServer {
 
     private static final int PORT = 8080;
 
-    private HttpsServer server;
+    private HttpServer server;
     public static TaskManager taskManager;
 
 
@@ -36,9 +37,9 @@ public class HttpTaskServer {
     public void start() {
         try {
             System.out.println("Сервер запущен на порту: " + PORT);
-            server = HttpsServer.create(new InetSocketAddress( PORT), 0);
+            server = HttpServer.create();
+            server.bind(new InetSocketAddress(PORT), 0);
             server.createContext("/tasks", new TaskHandler());
-            System.out.println("http://localhost" + PORT + "/tasks");
             server.start();
         } catch (IOException e) {
             System.out.println("Ошибка запуска сервера");
