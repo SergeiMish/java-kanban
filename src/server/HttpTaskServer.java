@@ -1,13 +1,22 @@
 package server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsServer;
 import interfaces.TaskManager;
 import manager.Managers;
+import server.adapter.DurationAdapter;
+import server.adapter.LocalDateTimeAdapter;
+import tasks.Status;
+import tasks.Task;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class HttpTaskServer {
 
@@ -29,6 +38,11 @@ public class HttpTaskServer {
     public static void main(String[] args) {
         taskManager = Managers.getDefault();
         HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        Task task = new Task("Поход в магазин", "Покупка молока", date, time, 30, Status.NEW);
+        taskManager.createTask(task);
+        taskManager.getListTasks();
         httpTaskServer.start();
 
 
@@ -49,6 +63,13 @@ public class HttpTaskServer {
     public void stop(){
         server.stop(0);
         System.out.println("Сервер остановлен на порту: " + PORT);
+    }
+
+    public static Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        return gsonBuilder.create();
     }
 }
 

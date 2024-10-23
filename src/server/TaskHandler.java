@@ -3,27 +3,29 @@ package server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import interfaces.TaskManager;
 import manager.InMemoryTaskManager;
-import manager.exeptions.TaskConflictException;
-import manager.exeptions.TaskNotFoundException;
+import manager.Managers;
+import tasks.Status;
 import tasks.Task;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+
+import static server.HttpTaskServer.getGson;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private InMemoryTaskManager manager;
-    private Gson gson;
+    private Gson gson ;
 
     public TaskHandler() {
-        this.manager = manager;
-        this.gson = gson;
+        this.manager = (InMemoryTaskManager) Managers.getDefault();
+        this.gson = getGson();
     }
 
 
@@ -35,29 +37,30 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
             switch (method) {
                 case "GET": {
-                    if (Pattern.matches("^/task$", path)) {
+                    if (Pattern.matches("^/tasks$", path)) {
+                        manager.getListTasks();
                         String response = gson.toJson(manager.getListTasks());
+                        System.out.println(response);
                         sendText(exchange, response);
                         break;
                     }
-                    if (Pattern.matches("^/task/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/task/", "");
+
+                    if (Pattern.matches("^/tasks/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/tasks/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
                             String response = gson.toJson(manager.getTaskId(id));
                             sendText(exchange, response);
-                            break;
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
                         }
                     } else {
-                        sendNotFound(exchange, "Такого id нет");
-                        break;
+                        sendNotFound(exchange, "Некорректный путь для GET запроса.");
                     }
                     break;
                 }
                 case "POST": {
-                    if (Pattern.matches("^/task$", path)) {
+                    if (Pattern.matches("^/tasks$", path)) {
                         InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
                         BufferedReader br = new BufferedReader(isr);
                         StringBuilder sb = new StringBuilder();
@@ -87,8 +90,8 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                         break;
                 }
                 case "DELETE": {
-                    if (Pattern.matches("^/task/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/task/", "");
+                    if (Pattern.matches("^/tasks/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/tasks/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
                             manager.deleteTask(id);
