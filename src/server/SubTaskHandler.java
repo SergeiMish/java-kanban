@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.InMemoryTaskManager;
 import manager.Managers;
+import tasks.SubTask;
 import tasks.Task;
 
 import java.io.BufferedReader;
@@ -15,16 +16,15 @@ import java.util.regex.Pattern;
 
 import static server.HttpTaskServer.getGson;
 
-public class TaskHandler extends BaseHttpHandler implements HttpHandler {
+public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private InMemoryTaskManager manager;
     private Gson gson;
 
-    public TaskHandler() {
+    public SubTaskHandler() {
         this.manager = (InMemoryTaskManager) Managers.getDefault();
         this.gson = getGson();
     }
-
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -34,19 +34,19 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
             switch (method) {
                 case "GET": {
-                    if (Pattern.matches("^/tasks$", path)) {
-                        manager.getListTasks();
-                        String response = gson.toJson(manager.getListTasks());
+                    if (Pattern.matches("^/subtask$", path)) {
+                        manager.getListSubTask();
+                        String response = gson.toJson(manager.getListSubTask());
                         System.out.println(response);
                         sendText(exchange, response);
                         break;
                     }
 
-                    if (Pattern.matches("^/tasks/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/", "");
+                    if (Pattern.matches("^/subtask/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/subtask/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
-                            String response = gson.toJson(manager.getTaskId(id));
+                            String response = gson.toJson(manager.getSubTaskId(id));
                             sendText(exchange, response);
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
@@ -57,7 +57,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     break;
                 }
                 case "POST": {
-                    if (Pattern.matches("^/tasks$", path)) {
+                    if (Pattern.matches("^/subtask$", path)) {
                         InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
                         BufferedReader br = new BufferedReader(isr);
                         StringBuilder sb = new StringBuilder();
@@ -66,21 +66,21 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                             sb.append(line);
                         }
                         String requestBody = sb.toString();
-                        Task task = gson.fromJson(requestBody, Task.class);
-                        Integer i = task.getId();
-                        if (i == null) {
-                            if (manager.canAddTask(task)) {
-                                manager.createTask(task);
+                        SubTask subTask = gson.fromJson(requestBody, SubTask.class);
+                        Integer i = subTask.getId();
+                        if (i == null) { // Предполагаем, что это новая подзадача
+                            if (manager.canAddTask(subTask)) {
+                                manager.createSubTask(subTask);
                                 exchange.sendResponseHeaders(201, 0);
-                                sendText(exchange, "Задача создана");
+                                sendText(exchange, "Подзадача создана");
                             } else {
                                 sendHasInteractions(exchange, "Задачи пересекаются по времени");
                             }
                         } else {
-                            if (manager.canAddTask(task)) {
-                                manager.updateTask(task);
+                            if (manager.canAddTask(subTask)) {
+                                manager.updateSubTask(subTask);
                                 exchange.sendResponseHeaders(200, 0);
-                                sendText(exchange, "Задача обновлена");
+                                sendText(exchange, "Подзадача обновлена");
                             } else {
                                 sendHasInteractions(exchange, "Задачи пересекаются по времени");
                             }
@@ -92,12 +92,12 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     break;
                 }
                 case "DELETE": {
-                    if (Pattern.matches("^/tasks/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/", "");
+                    if (Pattern.matches("^/subtask/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/subtask/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
-                            manager.deleteTask(id);
-                            sendText(exchange, "Удалили Task id - " + id);
+                            manager.deleteSubTask(id);
+                            sendText(exchange, "Удалили SubTask id - " + id);
                             break;
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
@@ -126,4 +126,3 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 }
-

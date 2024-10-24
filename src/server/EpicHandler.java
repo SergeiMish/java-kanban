@@ -5,7 +5,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.InMemoryTaskManager;
 import manager.Managers;
-import tasks.Task;
+import tasks.Epic;
+import tasks.SubTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,16 +16,15 @@ import java.util.regex.Pattern;
 
 import static server.HttpTaskServer.getGson;
 
-public class TaskHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     private InMemoryTaskManager manager;
     private Gson gson;
 
-    public TaskHandler() {
+    public EpicHandler() {
         this.manager = (InMemoryTaskManager) Managers.getDefault();
         this.gson = getGson();
     }
-
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -34,19 +34,19 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
             switch (method) {
                 case "GET": {
-                    if (Pattern.matches("^/tasks$", path)) {
-                        manager.getListTasks();
-                        String response = gson.toJson(manager.getListTasks());
+                    if (Pattern.matches("^/epic$", path)) {
+                        manager.getListEpic();
+                        String response = gson.toJson(manager.getListEpic());
                         System.out.println(response);
                         sendText(exchange, response);
                         break;
                     }
 
-                    if (Pattern.matches("^/tasks/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/", "");
+                    if (Pattern.matches("^/epic/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/epic/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
-                            String response = gson.toJson(manager.getTaskId(id));
+                            String response = gson.toJson(manager.getEpicId(id));
                             sendText(exchange, response);
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
@@ -54,10 +54,25 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     } else {
                         sendNotFound(exchange, "Некорректный путь для GET запроса.");
                     }
+
+                    if (Pattern.matches("^/epic/\\d+$/subtask", path)) {
+                        String pathId = path.replaceFirst("/epic/", "")
+                                .replaceFirst("/subtask", "");
+                        int id = parsePathId(pathId);
+                        if (id != -1) {
+                            String response = gson.toJson(manager.getListSubTasksOfEpic(id));
+                            sendText(exchange, response);
+                        } else {
+                            sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
+                        }
+                    } else {
+                        sendNotFound(exchange, "Некорректный путь для GET запроса.");
+                    }
+
                     break;
                 }
                 case "POST": {
-                    if (Pattern.matches("^/tasks$", path)) {
+                    if (Pattern.matches("^/epic$", path)) {
                         InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
                         BufferedReader br = new BufferedReader(isr);
                         StringBuilder sb = new StringBuilder();
@@ -66,24 +81,16 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                             sb.append(line);
                         }
                         String requestBody = sb.toString();
-                        Task task = gson.fromJson(requestBody, Task.class);
-                        Integer i = task.getId();
+                        Epic epic = gson.fromJson(requestBody, Epic.class);
+                        Integer i = epic.getId();
                         if (i == null) {
-                            if (manager.canAddTask(task)) {
-                                manager.createTask(task);
-                                exchange.sendResponseHeaders(201, 0);
-                                sendText(exchange, "Задача создана");
-                            } else {
-                                sendHasInteractions(exchange, "Задачи пересекаются по времени");
-                            }
+                            manager.createEpic(epic);
+                            exchange.sendResponseHeaders(201, 0);
+                            sendText(exchange, "Эпик создан");
                         } else {
-                            if (manager.canAddTask(task)) {
-                                manager.updateTask(task);
-                                exchange.sendResponseHeaders(200, 0);
-                                sendText(exchange, "Задача обновлена");
-                            } else {
-                                sendHasInteractions(exchange, "Задачи пересекаются по времени");
-                            }
+                            manager.updateEpic(epic);
+                            exchange.sendResponseHeaders(200, 0);
+                            sendText(exchange, "Эпик обновлен");
                         }
                         break;
                     } else {
@@ -92,12 +99,12 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                     break;
                 }
                 case "DELETE": {
-                    if (Pattern.matches("^/tasks/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/", "");
+                    if (Pattern.matches("^/epic/\\d+$", path)) {
+                        String pathId = path.replaceFirst("/epic/", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
-                            manager.deleteTask(id);
-                            sendText(exchange, "Удалили Task id - " + id);
+                            manager.deleteEpic(id);
+                            sendText(exchange, "Удалили Epic id - " + id);
                             break;
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
@@ -126,4 +133,3 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 }
-

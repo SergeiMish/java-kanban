@@ -38,10 +38,6 @@ public class HttpTaskServer {
     public static void main(String[] args) {
         taskManager = Managers.getDefault();
         HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        Task task = new Task("Поход в магазин", "Покупка молока", date, time, 30, Status.NEW);
-        taskManager.createTask(task);
         taskManager.getListTasks();
         httpTaskServer.start();
 
@@ -54,6 +50,8 @@ public class HttpTaskServer {
             server = HttpServer.create();
             server.bind(new InetSocketAddress(PORT), 0);
             server.createContext("/tasks", new TaskHandler());
+            server.createContext("/epic", new EpicHandler());
+            server.createContext("/subtask", new SubTaskHandler());
             server.start();
         } catch (IOException e) {
             System.out.println("Ошибка запуска сервера");
