@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpHandler;
 import manager.InMemoryTaskManager;
 import manager.Managers;
 import tasks.Epic;
-import tasks.SubTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,8 +17,8 @@ import static server.HttpTaskServer.getGson;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
-    private InMemoryTaskManager manager;
-    private Gson gson;
+    private final InMemoryTaskManager manager;
+    private final Gson gson;
 
     public EpicHandler() {
         this.manager = (InMemoryTaskManager) Managers.getDefault();
@@ -89,7 +88,6 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                             sendText(exchange, "Эпик создан");
                         } else {
                             manager.updateEpic(epic);
-                            exchange.sendResponseHeaders(200, 0);
                             sendText(exchange, "Эпик обновлен");
                         }
                         break;

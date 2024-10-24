@@ -17,8 +17,8 @@ import static server.HttpTaskServer.getGson;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
-    private InMemoryTaskManager manager;
-    private Gson gson;
+    private final InMemoryTaskManager manager;
+    private final Gson gson;
 
     public TaskHandler() {
         this.manager = (InMemoryTaskManager) Managers.getDefault();
@@ -79,7 +79,6 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                         } else {
                             if (manager.canAddTask(task)) {
                                 manager.updateTask(task);
-                                exchange.sendResponseHeaders(200, 0);
                                 sendText(exchange, "Задача обновлена");
                             } else {
                                 sendHasInteractions(exchange, "Задачи пересекаются по времени");

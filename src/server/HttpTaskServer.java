@@ -3,13 +3,12 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsServer;
 import interfaces.TaskManager;
 import manager.Managers;
 import server.adapter.DurationAdapter;
+import server.adapter.LocalDateAdapter;
 import server.adapter.LocalDateTimeAdapter;
-import tasks.Status;
-import tasks.Task;
+import server.adapter.LocalTimeAdapter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,27 +20,31 @@ import java.time.LocalTime;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-
-    private HttpServer server;
     public static TaskManager taskManager;
-
+    private HttpServer server;
 
 
     public HttpTaskServer(TaskManager manager) {
         taskManager = manager;
     }
 
-    public TaskManager getTaskManager() {
-        return taskManager;
-    }
-
     public static void main(String[] args) {
         taskManager = Managers.getDefault();
         HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.getListTasks();
         httpTaskServer.start();
+    }
 
+    public static Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+        gsonBuilder.registerTypeAdapter(LocalTime.class, new LocalTimeAdapter());
+        return gsonBuilder.create();
+    }
 
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 
     public void start() {
@@ -52,22 +55,17 @@ public class HttpTaskServer {
             server.createContext("/tasks", new TaskHandler());
             server.createContext("/epic", new EpicHandler());
             server.createContext("/subtask", new SubTaskHandler());
+            server.createContext("/history", new HistoryHandler());
+            server.createContext("/prioritized", new PrioritizedHandler());
             server.start();
         } catch (IOException e) {
             System.out.println("Ошибка запуска сервера");
         }
     }
 
-    public void stop(){
+    public void stop() {
         server.stop(0);
         System.out.println("Сервер остановлен на порту: " + PORT);
-    }
-
-    public static Gson getGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
-        return gsonBuilder.create();
     }
 }
 

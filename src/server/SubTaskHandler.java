@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpHandler;
 import manager.InMemoryTaskManager;
 import manager.Managers;
 import tasks.SubTask;
-import tasks.Task;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,8 +17,8 @@ import static server.HttpTaskServer.getGson;
 
 public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
 
-    private InMemoryTaskManager manager;
-    private Gson gson;
+    private final InMemoryTaskManager manager;
+    private final Gson gson;
 
     public SubTaskHandler() {
         this.manager = (InMemoryTaskManager) Managers.getDefault();
@@ -97,7 +96,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                         int id = parsePathId(pathId);
                         if (id != -1) {
                             manager.deleteSubTask(id);
-                            sendText(exchange, "Удалили SubTask id - " + id);
+                            sendText(exchange, "Удалили Subtask id - " + id);
                             break;
                         } else {
                             sendNotFound(exchange, "Получен некорректный идентификатор id " + pathId);
