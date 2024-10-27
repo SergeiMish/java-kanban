@@ -34,7 +34,6 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 case "GET": {
                     if (Pattern.matches("^/epic$", path)) {
                         String response = gson.toJson(manager.getListEpic());
-                        System.out.println(response);
                         sendText(exchange, response);
                         break;
                     }
@@ -83,7 +82,6 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                             try {
                                 if (epic.getId() <= 0) {
                                     manager.createEpic(epic);
-                                    exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Эпик создан");
                                 } else {
                                     manager.updateEpic(epic);
@@ -122,7 +120,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
     }
 

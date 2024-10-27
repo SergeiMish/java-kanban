@@ -36,7 +36,7 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
     }
 }

@@ -63,11 +63,9 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                             }
                             String requestBody = sb.toString();
                             SubTask subTask = gson.fromJson(requestBody, SubTask.class);
-
                             try {
                                 if (subTask.getId() <= 0) {
                                     manager.createSubTask(subTask);
-                                    exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Подзадача создана");
                                 } else {
                                     manager.updateSubTask(subTask);
@@ -106,7 +104,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
     }
 

@@ -39,9 +39,12 @@ public class HttpTaskServerTest {
     void init() {
         manager = (InMemoryTaskManager) Managers.getDefault();
         httpTaskServer = new HttpTaskServer(manager);
+        manager.deleteAllTask();
+        manager.deleteAllSubTask();
+        manager.deleteAllEpic();
         this.gson = getGson();
-        date = LocalDate.now();
-        time = LocalTime.now();
+        date = LocalDate.of(2024, 11, 24);
+        time = LocalTime.of(16, 31);
         date1 = LocalDate.of(2024, 10, 23);
         time1 = LocalTime.of(15, 30);
         date2 = LocalDate.of(2024, 11, 23);
@@ -117,9 +120,13 @@ public class HttpTaskServerTest {
 
     @Test
     void epicAndSubTaskAdd() throws IOException, InterruptedException {
+        manager.deleteAllEpic();
+        manager.deleteAllTask();
+        manager.deleteAllSubTask();
         HttpClient client = HttpClient.newHttpClient();
 
         Epic epic1 = new Epic("Имя1", "детали1", date1, time1, 30, Status.NEW);
+        manager.createEpic(epic1);
         String epicJson = gson.toJson(epic1);
         URI epicUrl = URI.create("http://localhost:8080/epic");
         HttpRequest epicRequest = HttpRequest.newBuilder()
@@ -132,7 +139,8 @@ public class HttpTaskServerTest {
 
         int epicId = epic1.getId();
 
-        SubTask subTask1 = new SubTask("Имя2", "детали2", date2, time2, 30, Status.NEW, epicId);
+        SubTask subTask1 = new SubTask("Имя2", "детали2", LocalDate.now(), LocalTime.now(), 30, Status.NEW, epicId);
+        manager.createSubTask(subTask1);
         String subTaskJson = gson.toJson(subTask1);
         URI subTaskUrl = URI.create("http://localhost:8080/subtask");
         HttpRequest subTaskRequest = HttpRequest.newBuilder()

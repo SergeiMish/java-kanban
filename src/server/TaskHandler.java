@@ -67,7 +67,6 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                             try {
                                 if (task.getId() <= 0) {
                                     manager.createTask(task);
-                                    exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Задача создана");
                                 } else {
                                     manager.updateTask(task);
@@ -106,7 +105,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
     }
 
