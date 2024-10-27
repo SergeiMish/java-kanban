@@ -63,9 +63,9 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                             }
                             String requestBody = sb.toString();
                             SubTask subTask = gson.fromJson(requestBody, SubTask.class);
-                            Integer i = subTask.getId();
+
                             try {
-                                if (i == null) {
+                                if (subTask.getId() <= 0) {
                                     manager.createSubTask(subTask);
                                     exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Подзадача создана");

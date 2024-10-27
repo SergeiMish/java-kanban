@@ -64,9 +64,8 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                             }
                             String requestBody = sb.toString();
                             Task task = gson.fromJson(requestBody, Task.class);
-                            Integer i = task.getId();
                             try {
-                                if (i == null) {
+                                if (task.getId() <= 0) {
                                     manager.createTask(task);
                                     exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Задача создана");

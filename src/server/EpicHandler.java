@@ -79,9 +79,9 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                             }
                             String requestBody = sb.toString();
                             Epic epic = gson.fromJson(requestBody, Epic.class);
-                            Integer i = epic.getId();
+
                             try {
-                                if (i == null) {
+                                if (epic.getId() <= 0) {
                                     manager.createEpic(epic);
                                     exchange.sendResponseHeaders(201, 0);
                                     sendText(exchange, "Эпик создан");
