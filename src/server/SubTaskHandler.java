@@ -71,7 +71,6 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
                                     sendText(exchange, "Подзадача создана");
                                 } else {
                                     manager.updateSubTask(subTask);
-                                    exchange.sendResponseHeaders(200, 0);
                                     sendText(exchange, "Подзадача обновлена");
                                 }
                             } catch (IllegalArgumentException e) {
